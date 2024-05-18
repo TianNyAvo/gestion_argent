@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accueil</title>
+</head>
+<body>
+    <h2>Bienvenue <%= user.prenom %></h2>
+    <p>Vous êtes <%= data %></p>
+    <a href="/insert/mouvement?user_id=664860fc107d85391ecf1e21&name=Rakoto&prenom=Jean">insérer mouvement pour guest Jean</a>
+    <form action="/logout" method="get">
+        <input type="submit" value="se déconnecter">
+    </form>
+</body>
+</html>

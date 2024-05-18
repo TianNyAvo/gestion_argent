@@ -33,19 +33,32 @@ const userSchema = new Schema({
   });
 
 const User = mongoose.model('users', userSchema);
+mongoose.connect("mongodb://localhost:27017/gestion_argent", {
+  useNewUrlParser: true,
+  bufferTimeoutMS: 60000, // Set bufferTimeoutMS to 60 seconds
+});
 
-exports.insertUser = async (user) => {
+
+exports.insertUser = async (req) => {
+    const user = new User({
+        role: "guest",
+        name: req.name,
+        prenom: req.prenom,
+        email: req.email,
+        mdp: req.mdp,
+        matricule: req.matricule
+        });
     const {db, client} = await dbServices.connectToDatabase();
-    const collection = db.collection('users');
+    // const collection = db.collection('users');
    try {
-     const result = await collection.insertOne(user);
-     console.log('Inserted user:', result);
-     client.close();
-     return result.ops[0];
-   } catch (error) {
+     const result = await user.save();
+     console.log('Inserted user:', result.toObject());
+     return result.toObject();
+    } catch (error) {
         console.error('Error inserting customer:', error);
         return { error: error };
-   }
+    }
+    finally{client.close();}
     
 };
 

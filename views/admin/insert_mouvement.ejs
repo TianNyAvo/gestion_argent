@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insertion mouvement</title>
+</head>
+
+<body>
+    <p>Ajouter mouvement pour <%= user.name %> <%= user.prenom %></p>
+    <form action="" method="post">
+        <p>Date</p>
+        <input type="date" name="date" id="">
+
+        <p>Montant</p>
+        <input type="number" name="montant" id="">
+
+        <p>Type</p>
+        <select name="type" id="">
+            <option selected></option>
+            <option value="input">Entrée</option>
+            <option value="output">Sortie</option>
+        </select>
+
+        <p>Commentaire</p>
+    <textarea type="text" name="description" id=""> </textarea>
+
+        <input type="text" name="user_id" value="<%= user.user_id %>" hidden>
+
+        <input type="submit" value="ajouter">
+
+    </form>
+
+</body>
+
+</html>
