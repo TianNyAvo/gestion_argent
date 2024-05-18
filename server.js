@@ -87,5 +87,5 @@ app.get('/insert/mouvement', function (req,res) {
 app.post('/insert/mouvement', function (req,res) {
     console.log(req.body);
     mouvementController.insertMouvement(req,res);
-    res.redirect('/');
+    res.redirect('/admin/home');
 });

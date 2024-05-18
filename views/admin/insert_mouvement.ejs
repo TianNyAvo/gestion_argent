@@ -9,7 +9,7 @@
 
 <body>
     <p>Ajouter mouvement pour <%= user.name %> <%= user.prenom %></p>
-    <form action="" method="post">
+    <form action="/insert/mouvement" method="post">
         <p>Date</p>
         <input type="date" name="date" id="">
 
@@ -24,7 +24,7 @@
         </select>
 
         <p>Commentaire</p>
-    <textarea type="text" name="description" id=""> </textarea>
+        <textarea type="text" name="description" id=""> </textarea>
 
         <input type="text" name="user_id" value="<%= user.user_id %>" hidden>
 
