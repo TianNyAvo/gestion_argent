@@ -96,12 +96,15 @@ app.post('/admin/singleUser', async function(req,res) {
     // console.log("single user par an ", data);
 });
 
-app.get('/guest/home', async function(req,res) {
-    const info = req.session.user_info;
-    var data = "data";
-    res.render(__dirname + "/views/guest/home.ejs", {user: info, data: data});
+app.get('/guest/home/:user_id', async function(req,res) {
+    var data = await mouvementController.getSingleUserMovement(req,res);
+    res.render(__dirname + "/views/guest/home.ejs", {data: data});
 });
 
+app.post('/guest/home', async function(req,res) {
+    var data = await mouvementController.getSingleUserMovement(req,res);
+    res.render(__dirname + "/views/guest/home.ejs", {data: data});
+});
 
 app.post('/login/user', async function (req,res) {
     // console.log(req.body);

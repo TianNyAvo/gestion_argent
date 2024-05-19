@@ -3,13 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Accueil</title>
+    <title>Informations</title>
 </head>
 <body>
-    <h2>Bienvenue <%= user.prenom %></h2>
-    <p>Vous êtes <%= data %></p>
-    <form action="/logout" method="get">
-        <input type="submit" value="se déconnecter">
+    <h2 id="user-info-text"></h2>
+    <p>voici votre résumé pour l'année <%= data.year %></p>
+    <a id="guest-home-link">retour à l'accueil</a>
+
+    <form action="/guest/home" method="post">
+        <select name="year" id="">
+            <option value="">année</option>
+            <option value="2020">2020</option>
+            <option value="2021">2021</option>
+            <option value="2022">2022</option>
+            <option value="2023">2023</option>
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+            <option value="2026">2026</option>
+            <option value="2027">2027</option>
+            <option value="2028">2028</option>
+            <option value="2029">2029</option>
+            <option value="2030">2030</option>
+        </select>
+        <input type="text" name="user_id" id="hiddenId" hidden>
+
+
+        <input type="submit" value="filtrer">
     </form>
+
+    <table class="move-table" border="1" >
+        <thead>
+            <tr>
+                <th>mois</th>
+                <th>entrée</th>
+                <th>sortie</th>
+                <th>solde</th>
+            </tr>
+        </thead>
+        <tbody>
+            <%
+                total_entre = 0
+                total_sortie = 0
+                total_solde = 0
+                data.movements.forEach(mouvement => { 
+                    
+                    total_entre = total_entre+mouvement.totalInput
+                    total_sortie = total_sortie+mouvement.totalOutput
+                    total_solde = total_solde+mouvement.difference
+            %>
+                <tr>
+                    <td><%= mouvement.month %></td>
+                    <td><%= mouvement.totalInput %></td>
+                    <td><%= mouvement.totalOutput %></td>
+                    <td><%= mouvement.difference %></td>
+                </tr>
+            <% }) %>
+            <tr>
+                <td><b>total</b></td>
+                <td><%= total_entre %></td>
+                <td><%= total_sortie %></td>
+                <td><%= total_solde %></td>
+            </tr>
+        </tbody>
+    </table>
 </body>
 </html>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+    // Vérifie si des données existent dans le localStorage
+    if (localStorage.getItem('user_info')) {
+        // Récupère les données du localStorage et les convertit en objet JavaScript
+        var userData = JSON.parse(localStorage.getItem('user_info'));
+
+        // Affiche les données dans la console
+        console.log('Données utilisateur:', userData);
+
+        // Ajoute les données à un champ hidden d'un formulaire avec l'ID "hiddenInput"
+        document.getElementById('user-info-text').textContent = "Bonjour "+userData.name+" "+userData.prenom+" matricule "+userData.matricule;
+        document.getElementById('hiddenId').value = userData._id;
+        document.getElementById('guest-home-link').href = "/guest/home/"+userData._id;
+    } else {
+        console.log('Aucune donnée utilisateur trouvée dans le localStorage.');
+    }
+});
+
+</script>
