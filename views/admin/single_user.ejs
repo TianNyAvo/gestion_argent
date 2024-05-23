@@ -8,6 +8,7 @@
 <body>
     <h2>Résumé de <%= data.user.name %> <%= data.user.prenom %> matricule <%= data.user.matricule %> pour l'année <%= data.year %></h2>
     <a href="/admin/home">retour à l'accueil</a>
+    <button id="logout-button">Se déconnecter</button>
 
     <form action="/admin/singleUser" method="post">
         <select name="year" id="">
@@ -67,3 +68,10 @@
     </table>
 </body>
 </html>
+
+<script>
+    document.getElementById('logout-button').addEventListener('click', function() {
+        localStorage.removeItem('user_info');
+        window.location.href = '/';
+    });
+</script>

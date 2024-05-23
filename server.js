@@ -96,6 +96,17 @@ app.post('/admin/singleUser', async function(req,res) {
     // console.log("single user par an ", data);
 });
 
+app.get('/admin/unpaid', async function (req,res) {
+    const data = await userController.getUnpaidUserMovementsByMonthYear(req,res);
+    console.log("single user par an ", data);
+    res.render(__dirname + "/views/admin/unpaid.ejs", {data: data})
+});
+
+app.post('/admin/unpaid', async function (req,res) {
+    const data = await userController.getUnpaidUserMovementsByMonthYear(req,res);
+    res.render(__dirname + "/views/admin/unpaid.ejs", {data: data})
+});
+
 app.get('/guest/home/:user_id', async function(req,res) {
     var data = await mouvementController.getSingleUserMovement(req,res);
     res.render(__dirname + "/views/guest/home.ejs", {data: data});
@@ -117,18 +128,6 @@ app.post('/login/user', async function (req,res) {
     else {
         res.redirect('/');
     }
-});
-
-app.get('/logout', function (req,res) {
-    req.session.destroy((err) => {
-        if (err) {
-            console.error('Error destroying session:', err);
-            res.send('Error destroying session');
-        } else {
-            res.redirect('/');
-            // res.send('Session destroyed');
-        }
-    });
 });
 
 app.get('/insert/mouvement/:user_id/:name/:prenom', function (req,res) {

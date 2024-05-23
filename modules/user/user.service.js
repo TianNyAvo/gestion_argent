@@ -304,3 +304,105 @@ exports.getUserMovementsByYear = async (year) => {
 
 
 // };
+
+exports.getUnpaidUserMovementsByMonthYear = async (month, year) => {
+    const startDate = new Date(year, month - 1, 1);
+    const endDate = new Date(year, month, 0, 23, 59, 59, 999); // Dernier jour du mois
+
+    try {
+        const result = await User.aggregate([
+            {
+                $lookup: {
+                    from: 'mouvements',
+                    let: { userId: '$_id' },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: {
+                                    $and: [
+                                        { $eq: ['$user_id', '$$userId'] },
+                                        { $gte: ['$date', startDate] },
+                                        { $lte: ['$date', endDate] }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            $group: {
+                                _id: '$type',
+                                totalMontant: { $sum: '$montant' }
+                            }
+                        }
+                    ],
+                    as: 'mouvements'
+                }
+            },
+            {
+                $addFields: {
+                    totalInput: {
+                        $reduce: {
+                            input: '$mouvements',
+                            initialValue: 0,
+                            in: {
+                                $cond: [
+                                    { $eq: ['$$this._id', 'input'] },
+                                    { $add: ['$$value', '$$this.totalMontant'] },
+                                    { $add: ['$$value', 0] }
+                                ]
+                            }
+                        }
+                    },
+                    totalOutput: {
+                        $reduce: {
+                            input: '$mouvements',
+                            initialValue: 0,
+                            in: {
+                                $cond: [
+                                    { $eq: ['$$this._id', 'output'] },
+                                    { $add: ['$$value', '$$this.totalMontant'] },
+                                    { $add: ['$$value', 0] }
+                                ]
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                $addFields: {
+                    difference: { $subtract: ['$totalInput', '$totalOutput'] }
+                }
+            },
+            {
+                $match: {
+                    $or: [
+                        { totalInput: { $eq: 0 } },
+                        { difference: { $lte: 0 } }
+                    ]
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    user_id: '$_id',
+                    name: 1,
+                    prenom: 1,
+                    matricule: 1,
+                    totalInput: 1,
+                    totalOutput: 1,
+                    difference: 1
+                }
+            }
+        ]);
+
+        const resultat = {
+            month: month,
+            year: year,
+            user_info: result
+        };
+
+        return resultat;
+    } catch (error) {
+        console.error('Error getting filtered user movements:', error);
+        throw error;
+    }
+};

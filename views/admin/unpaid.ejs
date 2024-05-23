@@ -4,17 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Informations</title>
+    <title>Liste par mois</title>
 </head>
 
 <body>
-    <h2 id="user-info-text"></h2>
-    <p>voici votre résumé pour l'année <%= data.year %>
-    </p>
-    <a id="guest-home-link">retour à l'accueil</a>
+    <h2>
+        <p id="prenom"> </p>
+    </h2>
+    <p>Liste de ceux qui n'ont pas encore payé pour l' année <%= data.year %></p>
+
+    <a href="/admin/home">voir liste par mois</a>
+
     <button id="logout-button">Se déconnecter</button>
 
-    <form action="/guest/home" method="post">
+    <form action="/admin/unpaid" method="post">
         <select name="year" id="">
             <option value="">année</option>
             <option value="2020">2020</option>
@@ -29,8 +32,6 @@
             <option value="2029">2029</option>
             <option value="2030">2030</option>
         </select>
-        <input type="text" name="user_id" id="hiddenId" hidden>
-
 
         <input type="submit" value="filtrer">
     </form>
@@ -38,26 +39,38 @@
     <table class="move-table" border="1">
         <thead>
             <tr>
-                <th>mois</th>
-                <th>entrée</th>
-                <th>sortie</th>
-                <th>solde</th>
+                <th></th>
+                <th>nom</th>
+                <th>prenom</th>
+                <th>matricule</th>
+                <th>Entrée</th>
+                <th>Sortie</th>
+                <th>Solde</th>
             </tr>
         </thead>
         <tbody>
-            <%
-                total_entre = 0
-                total_sortie = 0
-                total_solde = 0
-                data.movements.forEach(mouvement => { 
-                    
+            <% 
+                total_entre=0
+                total_sortie=0
+                total_solde=0
+                data.user_info.forEach(mouvement=> {
+
                     total_entre = total_entre+mouvement.totalInput
                     total_sortie = total_sortie+mouvement.totalOutput
                     total_solde = total_solde+mouvement.difference
-            %>
+                %>
                 <tr>
+                    <td><a
+                            href="/insert/mouvement/<%= mouvement.user_id %>/<%= mouvement.name %>/<%= mouvement.prenom %>">insérer
+                            mouvement</a></td>
+                    <td><a href="/admin/singleUser/<%= mouvement.user_id %>">
+                            <%= mouvement.name %>
+                        </a></td>
                     <td>
-                        <%= mouvement.month %>
+                        <%= mouvement.prenom %>
+                    </td>
+                    <td>
+                        <%= mouvement.matricule %>
                     </td>
                     <td>
                         <%= mouvement.totalInput %>
@@ -69,8 +82,11 @@
                         <%= mouvement.difference %>
                     </td>
                 </tr>
-                <% }) %>
+                <% }); %>
                     <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
                         <td><b>total</b></td>
                         <td>
                             <%= total_entre %>
@@ -84,6 +100,10 @@
                     </tr>
         </tbody>
     </table>
+
+    <input type="text" id="hiddenPrenom" name="prenom" hidden>
+    <input type="text" id="hiddenId" name="user_id" hidden>
+
 </body>
 
 </html>
@@ -98,13 +118,15 @@
             console.log('Données utilisateur:', userData);
 
             // Ajoute les données à un champ hidden d'un formulaire avec l'ID "hiddenInput"
-            document.getElementById('user-info-text').textContent = "Bonjour " + userData.name + " " + userData.prenom + " matricule " + userData.matricule;
+            document.getElementById('prenom').textContent = "Bienvenue " + userData.prenom;
+            document.getElementById('hiddenPrenom').value = userData.prenom;
             document.getElementById('hiddenId').value = userData._id;
-            document.getElementById('guest-home-link').href = "/guest/home/" + userData._id;
-        } else {
+        }
+        else {
             console.log('Aucune donnée utilisateur trouvée dans le localStorage.');
         }
     });
+
     document.getElementById('logout-button').addEventListener('click', function () {
         localStorage.removeItem('user_info');
         window.location.href = '/';

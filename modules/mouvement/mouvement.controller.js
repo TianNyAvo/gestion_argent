@@ -11,31 +11,6 @@ exports.insertMouvement = async (req, res) => {
     }
 };
 
-exports.getUserMovementsByMonthYear = async (req, res) => {
-    try {
-        var month = "";
-        if (req.body.month != "" && req.body.month != null) {
-            month = req.body.month;
-        }
-        else {
-            month = new Date().getMonth() + 1;
-        }
-        var year = "";
-        if (req.body.year != "" && req.body.year != null) {
-            year = req.body.year;
-        }
-        else {
-            year = new Date().getFullYear();
-        }
-        const result = await mouvementService.getUserMovementsByMonthYear(month, year);
-        return result;
-        // res.status(200).json(result);
-    } catch (error) {
-        console.error('Error getting user movements:', error);
-        res.status(500).json({ error: error });
-    }
-};
-
 exports.getSingleUserMovement = async (req, res) => {
     try {
         var user_id = "";

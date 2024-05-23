@@ -56,94 +56,6 @@ exports.insertMouvement = async (req) => {
     }
 };
 
-exports.getUserMovementsByMonthYear =  async (month, year) => {
-    var resultat = {};
-    const startDate = new Date(year, month - 1, 1);
-    const endDate = new Date(year, month, 0, 23, 59, 59, 999); // Dernier jour du mois
-
-    const result = await Mouvement.aggregate([
-        {
-            $match: {
-                date: { $gte: startDate, $lte: endDate }
-            }
-        },
-        {
-            $group: {
-                _id: { user_id: "$user_id", type: "$type" },
-                totalMontant: { $sum: "$montant" }
-            }
-        },
-        {
-            $lookup: {
-                from: "users",
-                localField: "_id.user_id",
-                foreignField: "_id",
-                as: "user"
-            }
-        },
-        {
-            $unwind: "$user"
-        },
-        {
-            $group: {
-                _id: "$_id.user_id",
-                name: { $first: "$user.name" },
-                prenom: { $first: "$user.prenom" },
-                matricule: { $first: "$user.matricule"},
-                totals: {
-                    $push: {
-                        type: "$_id.type",
-                        totalMontant: "$totalMontant"
-                    }
-                },
-                totalInput: {
-                    $sum: {
-                        $cond: [
-                            { $eq: ["$_id.type", "input"] },
-                            "$totalMontant",
-                            0
-                        ]
-                    }
-                },
-                totalOutput: {
-                    $sum: {
-                        $cond: [
-                            { $eq: ["$_id.type", "output"] },
-                            "$totalMontant",
-                            0
-                        ]
-                    }
-                }
-            }
-        },
-        {
-            $addFields: {
-                difference: { $subtract: ["$totalInput", "$totalOutput"] }
-            }
-        },
-        {
-            $project: {
-                _id: 0,
-                user_id: "$_id",
-                name: 1,
-                prenom: 1,
-                matricule:1,
-                totalInput: 1,
-                totalOutput: 1,
-                difference: 1
-            }
-        }
-    ]);
-    
-    resultat={
-        month: month,
-        year: year,
-        user_info: result
-    };
-    // console.log(resultat);
-    return resultat;
-}
-
 exports.getSingleUserMovements = async (userId, year) => {
     const startDate = new Date(year, 0, 1); // 1er janvier de l'année
     const endDate = new Date(year, 11, 31, 23, 59, 59, 999); // 31 décembre de l'année
@@ -226,3 +138,4 @@ exports.getSingleUserMovements = async (userId, year) => {
         movements: result
     };
 }
+

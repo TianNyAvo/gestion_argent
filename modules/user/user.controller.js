@@ -65,3 +65,27 @@ exports.getUserMovementsByMonthYear = async (req, res) => {
         res.status(500).json({ error: error });
     }
 };
+
+exports.getUnpaidUserMovementsByMonthYear = async (req, res) => {
+    try {
+        var month = "";
+        if (req.body.month != "" && req.body.month != null) {
+            month = req.body.month;
+        }
+        else {
+            month = new Date().getMonth() + 1;
+        }
+        var year = "";
+        if (req.body.year != "" && req.body.year != null) {
+            year = req.body.year;
+        }
+        else {
+            year = new Date().getFullYear();
+        }
+        const result = await userServices.getUnpaidUserMovementsByMonthYear(month, year);
+        return result;
+    } catch (error) {
+        console.error('Error getting user movements by year controller:', error);
+        res.status(500).json({ error: error });
+    }
+};
