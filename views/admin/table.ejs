@@ -16,13 +16,12 @@
 
     <a href="/admin/view/insert/user">Ajouter membre</a>
 
-    <a href="/admin/table">voir table</a>
-    <a href="/admin/unpaid">voir liste de ceux qui n'ont pas payé</a>
     <a href="/insert/depense">Ajouter dépenses</a>
+    <a href="/admin/home">retour accueil</a>
 
     <button id="logout-button">Se déconnecter</button>
 
-    <form action="/admin/home" method="post">
+    <form action="/admin/table" method="post">
         <select name="year" id="">
             <option value="">année</option>
             <option value="2020">2020</option>
@@ -45,29 +44,28 @@
         <thead>
             <tr>
                 <th></th>
-                <th>nom</th>
-                <th>prenom</th>
-                <th>matricule</th>
-                <th>Entrée</th>
-                <th>Sortie</th>
-                <th>Solde</th>
+                <th>Nom</th>
+                <th>Prenom</th>
+                <th>Matricule</th>
+                <th>Jan</th>
+                <th>Fév</th>
+                <th>Mar</th>
+                <th>Avr</th>
+                <th>Mai</th>
+                <th>Juin</th>
+                <th>Juil</th>
+                <th>Aoû</th>
+                <th>Sep</th>
+                <th>Oct</th>
+                <th>Nov</th>
+                <th>Déc</th>
             </tr>
         </thead>
         <tbody>
-            <%
-                total_entre = 0
-                total_sortie = 0
-                total_solde = 0
-                data.user_info.forEach(mouvement => { 
-                    
-                    total_entre = total_entre+mouvement.totalInput
-                    total_sortie = total_sortie+mouvement.totalOutput
-                    total_solde = total_solde+mouvement.difference
-            %>
+            <% data.results.forEach(mouvement => { %>
                 <tr>
                     <td><a
-                            href="/insert/mouvement/<%= mouvement.user_id %>/<%= mouvement.name %>/<%= mouvement.prenom %>">insérer
-                            mouvement</a></td>
+                            href="/insert/mouvement/<%= mouvement.user_id %>/<%= mouvement.name %>/<%= mouvement.prenom %>">ajouter cotisation</a></td>
                     <td><a href="/admin/singleUser/<%= mouvement.user_id %>">
                             <%= mouvement.name %>
                         </a></td>
@@ -77,32 +75,13 @@
                     <td>
                         <%= mouvement.matricule %>
                     </td>
-                    <td>
-                        <%= mouvement.totalInput %>
-                    </td>
-                    <td>
-                        <%= mouvement.totalOutput %>
-                    </td>
-                    <td>
-                        <%= mouvement.difference %>
-                    </td>
+                    <% mouvement.monthlyInputs.forEach(mvt => { %>
+                        <td>
+                            <%= mvt.total %>
+                        </td>
+                        <% }); %>
                 </tr>
                 <% }); %>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td><b>total</b></td>
-                        <td>
-                            <%= total_entre %>
-                        </td>
-                        <td>
-                            <%= total_sortie %>
-                        </td>
-                        <td>
-                            <%= total_solde %>
-                        </td>
-                    </tr>
         </tbody>
     </table>
 

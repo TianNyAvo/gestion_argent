@@ -54,6 +54,11 @@ app.post('/signup/user', function (req,res) {
     res.redirect('/');
 });
 
+app.post('/admin/signup/user', async function (req,res) {
+    const data = await userController.insertUser(req,res);
+    res.render(__dirname + "/views/admin/insert_mouvement.ejs", {user: data});
+});
+
 app.get('/admin/home', async function(req,res) {
     const info = req.params;
     // console.log("session ici",req.params,"voilaà");
@@ -67,6 +72,16 @@ app.post('/admin/home', async function(req,res) {
     var data = await userController.getUserMovementsByYear(req,res);
     // console.log(data);
     res.render(__dirname + "/views/admin/index.ejs", {user: info, data: data});
+});
+
+app.get('/admin/table', async function(req,res) {
+    const data = await userController.getAllUserCotisation(req,res);
+    res.render(__dirname + "/views/admin/table.ejs", {data: data})
+});
+
+app.post('/admin/table', async function(req,res) {
+    const data = await userController.getAllUserCotisation(req,res);
+    res.render(__dirname + "/views/admin/table.ejs", {data: data})
 });
 
 app.get('/admin/byMonth', async function(req,res) {
@@ -107,6 +122,15 @@ app.post('/admin/unpaid', async function (req,res) {
     res.render(__dirname + "/views/admin/unpaid.ejs", {data: data})
 });
 
+app.get('/admin/view/insert/user', function (req,res) {
+    res.render(__dirname + "/views/admin/insert_user.ejs")
+});
+
+app.post('/admin/insert/user', async function (req,res) {
+    const data = await userController.insertUser(req,res);
+    res.redirect('/admin/home/'+data._id+'/'+data.name+'/'+data.prenom);
+});
+
 app.get('/guest/home/:user_id', async function(req,res) {
     var data = await mouvementController.getSingleUserMovement(req,res);
     res.render(__dirname + "/views/guest/home.ejs", {data: data});
@@ -130,10 +154,13 @@ app.post('/login/user', async function (req,res) {
     }
 });
 
-app.get('/insert/mouvement/:user_id/:name/:prenom', function (req,res) {
+app.get('/insert/mouvement/:_id/:name/:prenom', function (req,res) {
     res.render(__dirname + "/views/admin/insert_mouvement.ejs", {user: req.params})
 });
 
+app.get('/insert/depense', function (req,res) {
+    res.sendFile(__dirname + "/views/admin/insert_depense.html")
+});
 
 app.post('/insert/mouvement', function (req,res) {
     console.log(req.body);

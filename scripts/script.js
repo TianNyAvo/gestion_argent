@@ -4,7 +4,7 @@ $(document).ready(function(){
 
         // Get the form data
         var formData = {
-            email: $('#email').val(),
+            matricule: $('#matricule').val(),
             mdp: $('#password').val()
         };
 

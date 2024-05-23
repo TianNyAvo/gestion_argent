@@ -25,7 +25,7 @@ const mouvementSchema = new Schema({
     user_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'users',
-        required: true,
+        required: false,
     },
   });
 
@@ -42,7 +42,7 @@ exports.insertMouvement = async (req) => {
         montant: req.montant,
         type: req.type,
         description: req.description,
-        user_id: new mongodb.ObjectId(req.user_id)
+        user_id: req.user_id ? new mongodb.ObjectId(req.user_id) : null,
         });
     const {db, client} = await dbServices.connectToDatabase();
     // const collection = db.collection('users');

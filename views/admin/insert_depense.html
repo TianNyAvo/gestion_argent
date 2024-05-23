@@ -4,13 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ajout cotisation</title>
+    <title>ajout dépense</title>
 </head>
 
 <body>
-    <p>Ajouter cotisation pour <%= user.name %>
-            <%= user.prenom %>
-    </p>
+    <p>Ajouter dépense</p>
 
     <a href="/admin/home">retour à l'accueil</a>
     <button id="logout-button">Se déconnecter</button>
@@ -22,13 +20,10 @@
         <p>Montant</p>
         <input type="number" name="montant" id="">
 
-        <input type="text" name="type" id="" value="input" hidden>
+        <input type="text" name="type" id="" value="output" hidden>
 
         <p>Commentaire</p>
         <textarea type="text" name="description" id=""> </textarea>
-
-
-        <input type="text" name="user_id" value="<%= user._id %>" hidden>
 
         <input type="submit" value="ajouter">
 

@@ -17,18 +17,14 @@ const userSchema = new Schema({
         type: String,
         required: false
     },
-    email: {
-        type: String,
-        required: true,
-        unique: true, // Assurez-vous que l'email est unique
-    },
     mdp: {
         type: String,
-        required: true,
+        required: false,
     },
     matricule: {
         type: String,
         required: true,
+        unique: true
     },
   });
 
@@ -45,10 +41,9 @@ exports.insertUser = async (req) => {
         role: "guest",
         name: req.name,
         prenom: req.prenom,
-        email: req.email,
-        mdp: req.mdp,
+        mdp: req.mdp ? req.mdp : "",
         matricule: req.matricule
-        });
+    });
     const {db, client} = await dbServices.connectToDatabase();
     // const collection = db.collection('users');
    try {
@@ -69,7 +64,7 @@ exports.loginUser = async (user) => {
     console.log('Logging in customer:', user);
     try {
         console.log('Logging in customer:', user);
-        const result = await collection.findOne({ email: user.email});
+        const result = await collection.findOne({ matricule: user.matricule});
         if (result) {
             if (result.mdp === user.mdp) {
                 console.log('Logged in user:', result);
@@ -78,13 +73,13 @@ exports.loginUser = async (user) => {
             }
         
             else {
-                console.log('Incorrect email or password');
+                console.log('Incorrect matricule or password');
                 client.close();
                 return  "incorrect";
             }
         }
         else {
-            console.log('Incorrect email or password');
+            console.log('Incorrect matricule or password');
             client.close();
             return "incorrect";
         }
@@ -108,6 +103,84 @@ exports.listUser = async () => {
         throw error;
     }
     finally{client.close();}
+};
+
+exports.getAllUserCotisation = async (year) => {
+    try {
+        const results = await User.aggregate([
+            {
+                $lookup: {
+                    from: 'mouvements',
+                    let: { userId: '$_id' },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: {
+                                    $and: [
+                                        { $eq: ['$user_id', '$$userId'] },
+                                        { $eq: [{ $year: '$date' }, year] },
+                                        { $eq: ['$type', 'input'] }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            $group: {
+                                _id: { month: { $month: '$date' } },
+                                totalMontant: { $sum: '$montant' }
+                            }
+                        }
+                    ],
+                    as: 'mouvements'
+                }
+            },
+            {
+                $addFields: {
+                    monthlyInputs: {
+                        $map: {
+                            input: { $range: [1, 13] },
+                            as: 'month',
+                            in: {
+                                month: '$$month',
+                                total: {
+                                    $reduce: {
+                                        input: '$mouvements',
+                                        initialValue: 0,
+                                        in: {
+                                            $cond: [
+                                                { $eq: ['$$this._id.month', '$$month'] },
+                                                { $add: ['$$value', '$$this.totalMontant'] },
+                                                '$$value'
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    user_id: '$_id',
+                    name: 1,
+                    prenom: 1,
+                    matricule: 1,
+                    monthlyInputs: 1
+                }
+            }
+        ]);
+
+        console.log('All user cotisations:', results);
+        return {
+            year: year,
+            results: results
+        };
+    } catch (error) {
+        console.error('Error fetching user movements:', error);
+        throw error;
+    }
 };
 
 exports.getUserMovementsByMonthYear = async (month, year) => {

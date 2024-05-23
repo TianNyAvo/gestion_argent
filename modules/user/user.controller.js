@@ -4,7 +4,8 @@ exports.insertUser = async (req, res) => {
     try {
         const user = req.body;
         const result = await userServices.insertUser(user);
-        res.status(200).json(result);
+        return result;
+        // res.status(200).json(result);
     } catch (error) {
         console.error('Error inserting user:', error);
         res.status(500).json({ error: error });
@@ -23,6 +24,25 @@ exports.loginUser = async (req, res) => {
         res.status(500).json({ error: error });
     }
 }
+
+exports.getAllUserCotisation = async (req, res) => {
+    try {
+        var year = "";
+        if (req.body.year != "" && req.body.year != null) {
+            year = Number.parseInt(req.body.year);
+            console.log("year", year);
+        }
+        else {
+            year = new Date().getFullYear();
+            console.log("year", year);
+        }
+        const result = await userServices.getAllUserCotisation(year);
+        return result;
+    } catch (error) {
+        console.error('Error getting all user cotisation:', error);
+        res.status(500).json({ error: error });
+    }
+};
 
 exports.getUserMovementsByYear = async (req, res) => {
     try {
