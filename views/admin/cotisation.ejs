@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+    
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Liste par mois</title>
+    </head>
+    
+    <body>
+        <h2>
+        <p id="prenom"> </p>
+    </h2>
+    <p>Liste des cotisation pour l' année <%= data.year %>
+    </p>
+    
+
+    <a href="/admin/home">retour accueil</a>
+    
+    <button id="logout-button">Se déconnecter</button>
+    
+    <form action="/admin/allcotisation" method="post">
+        <select name="year" id="">
+            <option value="">année</option>
+            <option value="2020">2020</option>
+            <option value="2021">2021</option>
+            <option value="2022">2022</option>
+            <option value="2023">2023</option>
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+            <option value="2026">2026</option>
+            <option value="2027">2027</option>
+            <option value="2028">2028</option>
+            <option value="2029">2029</option>
+            <option value="2030">2030</option>
+        </select>
+    
+        <input type="submit" value="filtrer">
+    </form>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>date</th>
+                <th>Matricule</th>
+                <th>Nom</th>
+                <th>Prenom</th>
+                <th>Montant</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% 
+                total = 0
+                data.cotisations.forEach(cotisation => { 
+                    total = total+cotisation.montant
+            %>
+                <tr>
+                    <td>
+                        <%= cotisation.date %>
+                    </td>
+                    <td>
+                        <%= cotisation.user.matricule %>
+                    <td>
+                        <%= cotisation.user.name %>
+                    </td>
+                    <td>
+                        <%= cotisation.user.prenom %>
+                    </td>
+                    <td>
+                        <%= cotisation.montant %>
+                    </td>
+                </tr>
+                <% }); %>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td><b>total</b></td>
+                    <td>
+                        <%= total %>
+                    </td>
+                </tr>
+        </tbody>
+    </table>
+
+</body>
+
+</html>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Vérifie si des données existent dans le localStorage
+        if (localStorage.getItem('user_info')) {
+            // Récupère les données du localStorage et les convertit en objet JavaScript
+            var userData = JSON.parse(localStorage.getItem('user_info'));
+
+            // Affiche les données dans la console
+            console.log('Données utilisateur:', userData);
+
+            // Ajoute les données à un champ hidden d'un formulaire avec l'ID "hiddenInput"
+            document.getElementById('prenom').textContent = "Bienvenue " + userData.prenom;
+            document.getElementById('hiddenPrenom').value = userData.prenom;
+            document.getElementById('hiddenId').value = userData._id;
+        }
+        else {
+            console.log('Aucune donnée utilisateur trouvée dans le localStorage.');
+        }
+    });
+
+    document.getElementById('logout-button').addEventListener('click', function () {
+        localStorage.removeItem('user_info');
+        window.location.href = '/';
+    });
+
+</script>

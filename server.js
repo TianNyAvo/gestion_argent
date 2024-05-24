@@ -89,6 +89,26 @@ app.post('/admin/table', async function(req,res) {
     res.render(__dirname + "/views/admin/table.ejs", {data: data, situation: totals})
 });
 
+app.get('/admin/depenses', async function(req,res) {
+    const data = await mouvementController.getDepensesByYear(req,res);
+    res.render(__dirname + "/views/admin/depenses.ejs", {data: data});
+});
+
+app.post('/admin/depenses', async function(req,res) {
+    const data = await mouvementController.getDepensesByYear(req,res);
+    res.render(__dirname + "/views/admin/depenses.ejs", {data: data});
+});
+
+app.get('/admin/allcotisation', async function(req,res) {
+    const data = await mouvementController.getAllCotisationsByYear(req,res);
+    res.render(__dirname + "/views/admin/cotisation.ejs", {data: data});
+});
+
+app.post('/admin/allcotisation', async function(req,res) {
+    const data = await mouvementController.getAllCotisationsByYear(req,res);
+    res.render(__dirname + "/views/admin/cotisation.ejs", {data: data});
+});
+
 app.get('/admin/byMonth', async function(req,res) {
     var data = await userController.getUserMovementsByMonthYear(req,res);
     console.log("par mois ", data)

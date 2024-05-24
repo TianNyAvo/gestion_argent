@@ -1,6 +1,7 @@
 var dbServices = require('../database/database.service');
 var mongodb = require('mongodb');
 
+
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const User = require('../user/user.service').User;
@@ -248,3 +249,93 @@ exports.getSingleUserMovements = async (userId, year) => {
     };
 }
 
+exports.getDepensesByYear = async (year) => {
+    try {
+        const startDate = new Date(year, 0, 1);
+        const endDate = new Date(year, 11, 31, 23, 59, 59, 999);
+
+        var result = await Mouvement.find({
+            date: { $gte: startDate, $lte: endDate },
+            type: 'output'
+        }).sort({ date: 1 });
+
+        //format date in result
+        const formattedResult = result.map(expense => {
+            const date = new Date(expense.date);
+            const formattedDate = `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
+
+            return {
+                ...expense._doc,
+                date: formattedDate
+            };
+        });
+
+        console.log('Depenses by year:', formattedResult);
+
+        return {
+            year: year,
+            depenses: formattedResult
+        };
+    } catch (error) {
+        console.error('Error getting expenses by year:', error);
+        throw error;
+    }
+};
+
+exports.getAllCotisationsByYear = async (year) => {
+    try {
+        const startDate = new Date(year, 0, 1);
+        const endDate = new Date(year, 11, 31, 23, 59, 59, 999);
+
+        const result = await Mouvement.aggregate([
+            {
+                $match: {
+                    date: { $gte: startDate, $lte: endDate },
+                    type: 'input'
+                }
+            },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'user_id',
+                    foreignField: '_id',
+                    as: 'user'
+                }
+            },
+            {
+                $unwind: '$user'
+            },
+            {
+                $project: {
+                    _id: 1,
+                    date: {
+                        $dateToString: {
+                            format: '%d-%m-%Y',
+                            date: '$date'
+                        }
+                    },
+                    montant: 1,
+                    type: 1,
+                    description: 1,
+                    user_id: 1,
+                    'user.name': 1,
+                    'user.prenom': 1,
+                    'user.matricule': 1
+                }
+            },
+            {
+                $sort: { date: 1 }
+            }
+        ]);
+
+        console.log('Cotisations by year:', result);
+
+        return {
+            year: year,
+            cotisations: result
+        };
+    } catch (error) {
+        console.error('Error getting inputs by year with user:', error);
+        throw error;
+    }
+};

@@ -58,3 +58,37 @@ exports.getTotalInputsOutputsByYear = async (req, res) => {
         console.log('Error getting TotalInputsOutputsByYear', error);
     }
 };
+
+exports.getDepensesByYear = async (req, res) => {
+    try {
+        var year = "";
+        if (req.body.year != "" && req.body.year != null) {
+            year = req.body.year;
+        }
+        else {
+            year = new Date().getFullYear();
+        }
+        const result = await mouvementService.getDepensesByYear(year);
+        return result;
+    }
+    catch (error) {
+        console.log('Error getting DepensesByYear', error);
+    }
+};
+
+exports.getAllCotisationsByYear = async (req, res) => {
+    try {
+        var year = "";
+        if (req.body.year != "" && req.body.year != null) {
+            year = req.body.year;
+        }
+        else {
+            year = new Date().getFullYear();
+        }
+        const result = await mouvementService.getAllCotisationsByYear(year);
+        return result;
+    }
+    catch (error) {
+        console.log('Error getting AllCotisationsByYear', error);
+    }
+};
