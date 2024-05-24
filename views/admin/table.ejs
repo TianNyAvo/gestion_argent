@@ -19,6 +19,9 @@
     <a href="/insert/depense">Ajouter dépenses</a>
     <a href="/admin/home">retour accueil</a>
 
+    <p>Total des cotisations <%= situation.totalInput %>Ar</p>
+    <p>Total des dépenses <%= situation.totalOutput %>Ar</p>
+
     <button id="logout-button">Se déconnecter</button>
 
     <form action="/admin/table" method="post">

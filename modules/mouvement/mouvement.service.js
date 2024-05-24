@@ -56,6 +56,115 @@ exports.insertMouvement = async (req) => {
     }
 };
 
+exports.getTotalInputsAndOutputs = async (year = null) => {
+    try {
+        const matchStage = year
+            ? { $match: { date: { $gte: new Date(year, 0, 1), $lte: new Date(year, 11, 31, 23, 59, 59, 999) } } }
+            : { $match: {} };
+
+        const result = await Mouvement.aggregate([
+            matchStage,
+            {
+                $group: {
+                    _id: '$type',
+                    totalMontant: { $sum: '$montant' }
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    type: '$_id',
+                    totalMontant: 1
+                }
+            }
+        ]);
+
+        var totalInput = 0;
+        var totalOutput = 0;
+        console.log("result total", result);
+
+        result.forEach(item => {
+            if (item.type === 'input') {
+                totalInput = item.totalMontant;
+            } else if (item.type === 'output') {
+                totalOutput = item.totalMontant;
+            }
+        });
+
+        return {
+            totalInput: totalInput,
+            totalOutput: totalOutput
+        };
+    } catch (error) {
+        console.error('Error calculating totals:', error);
+        throw error;
+    }
+}
+
+exports.getTotalInputsOutputsByYear = async () => {
+    try {
+        const result = await Mouvement.aggregate([
+            {
+                $group: {
+                    _id: {
+                        year: { $year: '$date' },
+                        type: '$type'
+                    },
+                    totalMontant: { $sum: '$montant' }
+                }
+            },
+            {
+                $group: {
+                    _id: '$_id.year',
+                    totals: {
+                        $push: {
+                            type: '$_id.type',
+                            totalMontant: '$totalMontant'
+                        }
+                    }
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    year: '$_id',
+                    totalInput: {
+                        $reduce: {
+                            input: '$totals',
+                            initialValue: 0,
+                            in: {
+                                $cond: [
+                                    { $eq: ['$$this.type', 'input'] },
+                                    { $add: ['$$value', '$$this.totalMontant'] },
+                                    '$$value'
+                                ]
+                            }
+                        }
+                    },
+                    totalOutput: {
+                        $reduce: {
+                            input: '$totals',
+                            initialValue: 0,
+                            in: {
+                                $cond: [
+                                    { $eq: ['$$this.type', 'output'] },
+                                    { $add: ['$$value', '$$this.totalMontant'] },
+                                    '$$value'
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        ]);
+
+        return result;
+    } catch (error) {
+        console.error('Error calculating totals by year:', error);
+        throw error;
+    }
+}
+
 exports.getSingleUserMovements = async (userId, year) => {
     const startDate = new Date(year, 0, 1); // 1er janvier de l'année
     const endDate = new Date(year, 11, 31, 23, 59, 59, 999); // 31 décembre de l'année

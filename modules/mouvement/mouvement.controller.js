@@ -37,3 +37,24 @@ exports.getSingleUserMovement = async (req, res) => {
         res.status(500).json({ error: error });
     }
 };
+
+exports.getTotalInputsAndOutputs = async (req,res) => {
+    try {
+        const year = req.body.year;
+        const result = await mouvementService.getTotalInputsAndOutputs(year);
+        return result;
+    }
+    catch (error) {
+        console.log('Error getting TotalInputsAndOutputs', error);
+    }
+};
+
+exports.getTotalInputsOutputsByYear = async (req, res) => {
+    try {
+        const result = await mouvementService.getTotalInputsOutputsByYear();
+        return result;
+    }
+    catch (error) {
+        console.log('Error getting TotalInputsOutputsByYear', error);
+    }
+};

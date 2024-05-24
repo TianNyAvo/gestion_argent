@@ -64,7 +64,9 @@ app.get('/admin/home', async function(req,res) {
     // console.log("session ici",req.params,"voilaà");
     var data = await userController.getUserMovementsByYear(req,res);
     // console.log(data);
-    res.render(__dirname + "/views/admin/index.ejs", {user: info, data: data});
+    var totals = await mouvementController.getTotalInputsAndOutputs(req,res);
+    var totalyear = await mouvementController.getTotalInputsOutputsByYear(req,res);
+    res.render(__dirname + "/views/admin/index.ejs", {user: info, data: data, situation: totals, totalyear: totalyear});
 });
 
 app.post('/admin/home', async function(req,res) {
@@ -76,12 +78,15 @@ app.post('/admin/home', async function(req,res) {
 
 app.get('/admin/table', async function(req,res) {
     const data = await userController.getAllUserCotisation(req,res);
-    res.render(__dirname + "/views/admin/table.ejs", {data: data})
+    req.body.year = new Date().getFullYear();
+    var totals = await mouvementController.getTotalInputsAndOutputs(req,res);
+    res.render(__dirname + "/views/admin/table.ejs", {data: data, situation: totals})
 });
 
 app.post('/admin/table', async function(req,res) {
     const data = await userController.getAllUserCotisation(req,res);
-    res.render(__dirname + "/views/admin/table.ejs", {data: data})
+    var totals = await mouvementController.getTotalInputsAndOutputs(req,res);
+    res.render(__dirname + "/views/admin/table.ejs", {data: data, situation: totals})
 });
 
 app.get('/admin/byMonth', async function(req,res) {
