@@ -6,20 +6,18 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Liste par mois</title>
     </head>
+<link rel="stylesheet" href="/style.css">
+
     
     <body>
-        <h2>
-        <p id="prenom"> </p>
-    </h2>
-    <p>Liste des cotisation pour l' année <%= data.year %>
-    </p>
+    <h3>Liste des cotisation pour l' année <%= data.year %></h3>
     
 
     <a href="/admin/home">retour accueil</a>
     
     <button id="logout-button">Se déconnecter</button>
     
-    <form action="/admin/allcotisation" method="post">
+    <form action="/admin/allcotisation" method="post" class="filter-form">
         <select name="year" id="">
             <option value="">année</option>
             <option value="2020">2020</option>

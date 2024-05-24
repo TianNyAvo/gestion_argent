@@ -218,24 +218,20 @@ exports.getSingleUserMovements = async (userId, year) => {
     const result = months.map((month, index) => {
         const monthData = movements.find(m => m._id === index + 1);
         let totalInput = 0;
-        let totalOutput = 0;
 
         if (monthData) {
             const inputData = monthData.movements.find(m => m.type === 'input');
-            const outputData = monthData.movements.find(m => m.type === 'output');
             if (inputData) totalInput = inputData.totalMontant;
-            if (outputData) totalOutput = outputData.totalMontant;
         }
 
-        const difference = totalInput - totalOutput;
 
         return {
             month,
             totalInput,
-            totalOutput,
-            difference
         };
     });
+
+    console.log('Single user movements:', result);
 
     return {
         user: {
@@ -310,7 +306,7 @@ exports.getAllCotisationsByYear = async (year) => {
                     _id: 1,
                     date: {
                         $dateToString: {
-                            format: '%d-%m-%Y',
+                            format: '%d/%m/%Y',
                             date: '$date'
                         }
                     },

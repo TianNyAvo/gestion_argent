@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Informations</title>
 </head>
+<link rel="stylesheet" href="/style.css">
+
 <body>
     <h2>Résumé de <%= data.user.name %> <%= data.user.prenom %> matricule <%= data.user.matricule %> pour l'année <%= data.year %></h2>
     <a href="/admin/home">retour à l'accueil</a>
@@ -36,33 +38,23 @@
             <tr>
                 <th>mois</th>
                 <th>entrée</th>
-                <th>sortie</th>
-                <th>solde</th>
             </tr>
         </thead>
         <tbody>
             <%
                 total_entre = 0
-                total_sortie = 0
-                total_solde = 0
                 data.movements.forEach(mouvement => { 
                     
                     total_entre = total_entre+mouvement.totalInput
-                    total_sortie = total_sortie+mouvement.totalOutput
-                    total_solde = total_solde+mouvement.difference
             %>
                 <tr>
                     <td><%= mouvement.month %></td>
                     <td><%= mouvement.totalInput %></td>
-                    <td><%= mouvement.totalOutput %></td>
-                    <td><%= mouvement.difference %></td>
                 </tr>
             <% }) %>
             <tr>
                 <td><b>total</b></td>
                 <td><%= total_entre %></td>
-                <td><%= total_sortie %></td>
-                <td><%= total_solde %></td>
             </tr>
         </tbody>
     </table>

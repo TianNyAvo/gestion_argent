@@ -41,7 +41,7 @@ exports.insertUser = async (req) => {
         role: "guest",
         name: req.name,
         prenom: req.prenom,
-        mdp: req.mdp ? req.mdp : "",
+        mdp: req.mdp ? req.mdp : "fgk$yergpojf",
         matricule: req.matricule
     });
     const {db, client} = await dbServices.connectToDatabase();
@@ -49,7 +49,7 @@ exports.insertUser = async (req) => {
    try {
      const result = await user.save();
      console.log('Inserted user:', result.toObject());
-     return result.toObject();
+     return result;
     } catch (error) {
         console.error('Error inserting customer:', error);
         return { error: error };

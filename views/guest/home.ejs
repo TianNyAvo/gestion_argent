@@ -6,15 +6,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Informations</title>
 </head>
+<link rel="stylesheet" href="/style.css">
+
 
 <body>
+    <h2>SLBA "Miray hina" tongasoa</h2>
     <h2 id="user-info-text"></h2>
-    <p>voici votre résumé pour l'année <%= data.year %>
-    </p>
     <a id="guest-home-link">retour à l'accueil</a>
     <button id="logout-button">Se déconnecter</button>
 
-    <form action="/guest/home" method="post">
+    <center><table border="1" class="smaller-table">
+        <thead>
+            <tr>
+                <th>Année</th>
+                <th>Total cotisation</th>
+                <th>Total dépenses</th>
+                <th>Situation</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% totalyear.forEach(total => { %>
+                <tr>
+                    <td>
+                        <b><%= total.year %></b>
+                    </td>
+                    <td>
+                        <%= total.totalInput %>
+                    </td>
+                    <td>
+                        <%= total.totalOutput %>
+                    </td>
+                    <td>
+                        <%= total.totalInput-total.totalOutput %>
+                    </td>
+                </tr>
+                <% }); %>
+            <tr>
+                <td><h3>Total</h3></td>
+                <td><h3> <%= situation.totalInput %></h3></td>
+                <td><h3><%= situation.totalOutput %></h3></td>
+                <td><h3><%= situation.totalInput-situation.totalOutput %></h3></td>
+            </tr>
+        </tbody>
+    </table>
+    </center>
+    <h3>voici votre résumé pour l'année <%= data.year %></h3>
+    <form action="/guest/home" method="post" class="filter-form">
         <select name="year" id="">
             <option value="">année</option>
             <option value="2020">2020</option>
@@ -35,25 +72,21 @@
         <input type="submit" value="filtrer">
     </form>
 
-    <table class="move-table" border="1">
+
+    <center>
+    <table border="1" class="smaller-table">
         <thead>
             <tr>
                 <th>mois</th>
                 <th>entrée</th>
-                <th>sortie</th>
-                <th>solde</th>
             </tr>
         </thead>
         <tbody>
             <%
                 total_entre = 0
-                total_sortie = 0
-                total_solde = 0
                 data.movements.forEach(mouvement => { 
                     
                     total_entre = total_entre+mouvement.totalInput
-                    total_sortie = total_sortie+mouvement.totalOutput
-                    total_solde = total_solde+mouvement.difference
             %>
                 <tr>
                     <td>
@@ -62,12 +95,7 @@
                     <td>
                         <%= mouvement.totalInput %>
                     </td>
-                    <td>
-                        <%= mouvement.totalOutput %>
-                    </td>
-                    <td>
-                        <%= mouvement.difference %>
-                    </td>
+
                 </tr>
                 <% }) %>
                     <tr>
@@ -75,15 +103,10 @@
                         <td>
                             <%= total_entre %>
                         </td>
-                        <td>
-                            <%= total_sortie %>
-                        </td>
-                        <td>
-                            <%= total_solde %>
-                        </td>
                     </tr>
         </tbody>
     </table>
+</center>
 </body>
 
 </html>
@@ -98,7 +121,7 @@
             console.log('Données utilisateur:', userData);
 
             // Ajoute les données à un champ hidden d'un formulaire avec l'ID "hiddenInput"
-            document.getElementById('user-info-text').textContent = "Bonjour " + userData.name + " " + userData.prenom + " matricule " + userData.matricule;
+            document.getElementById('user-info-text').textContent = "" + userData.name + " " + userData.prenom + " matricule " + userData.matricule;
             document.getElementById('hiddenId').value = userData._id;
             document.getElementById('guest-home-link').href = "/guest/home/" + userData._id;
         } else {

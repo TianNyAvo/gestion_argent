@@ -53,7 +53,7 @@ exports.getUserMovementsByYear = async (req, res) => {
         else {
             year = new Date().getFullYear();
         }
-        const result = await userServices.getUserMovementsByYear(year);
+        const result = await userServices.getUserMovementsByYear(year); 
         return result;
         // res.status(200).json(result);
     } catch (error) {

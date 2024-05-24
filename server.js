@@ -1,8 +1,8 @@
 const express = require('express');
 const app = express();
-const session = require('express-session');
+// const session = require('express-session');
 const bodyParser = require('body-parser');
-const MongoStore = require('connect-mongo');
+// const MongoStore = require('connect-mongo');
 const path = require('path'); // Ajoutez cette ligne pour manipuler les chemins de fichier
 const cors = require('cors');
 const userController = require('./modules/user/user.controller');
@@ -16,6 +16,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // app.use(cors());
 
 app.use(express.static(path.join(__dirname, 'scripts')));
+app.use(express.static(path.join(__dirname, 'style')));
 
 // app.use(session({
 //     secret: 'your-secret-key',
@@ -24,17 +25,17 @@ app.use(express.static(path.join(__dirname, 'scripts')));
 //   })
 // );
 
-app.use(session({
-    secret: 'your-secret-key',
-    resave: false,
-    saveUninitialized: true,
-    store: MongoStore.create({ 
-        mongoUrl: 'mongodb://localhost:27017/',
-        dbName: 'gestion_argent',
-        collectionName: 'sessions' // Nom de la collection où stocker les sessions
-    }),
-    cookie: { secure: true }
-}));
+// app.use(session({
+//     secret: 'your-secret-key',
+//     resave: false,
+//     saveUninitialized: true,
+//     store: MongoStore.create({ 
+//         mongoUrl: 'mongodb://localhost:27017/',
+//         dbName: 'gestion_argent',
+//         collectionName: 'sessions' // Nom de la collection où stocker les sessions
+//     }),
+//     cookie: { secure: true }
+// }));
 
 app.listen(3000, function () {
     console.log('listening on 3000');
@@ -48,10 +49,10 @@ app.get('/signup', function (req,res) {
     res.sendFile(__dirname + "/views/guest/signup.html")
 });
 
-app.post('/signup/user', function (req,res) {
+app.post('/signup/user', async function (req,res) {
     // console.log(req.body);
-    userController.insertUser(req,res);
-    res.redirect('/');
+    var user = await userController.insertUser(req,res);
+    res.status(200).json(user);
 });
 
 app.post('/admin/signup/user', async function (req,res) {
@@ -62,19 +63,19 @@ app.post('/admin/signup/user', async function (req,res) {
 app.get('/admin/home', async function(req,res) {
     const info = req.params;
     // console.log("session ici",req.params,"voilaà");
-    var data = await userController.getUserMovementsByYear(req,res);
+    // var data = await userController.getUserMovementsByYear(req,res);//fonction pour avoir total mais pour un mois
     // console.log(data);
     var totals = await mouvementController.getTotalInputsAndOutputs(req,res);
     var totalyear = await mouvementController.getTotalInputsOutputsByYear(req,res);
-    res.render(__dirname + "/views/admin/index.ejs", {user: info, data: data, situation: totals, totalyear: totalyear});
+    res.render(__dirname + "/views/admin/index.ejs", {user: info, situation: totals, totalyear: totalyear});
 });
 
-app.post('/admin/home', async function(req,res) {
-    const info = req.body;
-    var data = await userController.getUserMovementsByYear(req,res);
-    // console.log(data);
-    res.render(__dirname + "/views/admin/index.ejs", {user: info, data: data});
-});
+// app.post('/admin/home', async function(req,res) {
+//     const info = req.body;
+//     var data = await userController.getUserMovementsByYear(req,res);
+//     // console.log(data);
+//     res.render(__dirname + "/views/admin/index.ejs", {user: info, data: data});
+// });
 
 app.get('/admin/table', async function(req,res) {
     const data = await userController.getAllUserCotisation(req,res);
@@ -158,7 +159,9 @@ app.post('/admin/insert/user', async function (req,res) {
 
 app.get('/guest/home/:user_id', async function(req,res) {
     var data = await mouvementController.getSingleUserMovement(req,res);
-    res.render(__dirname + "/views/guest/home.ejs", {data: data});
+    var totals = await mouvementController.getTotalInputsAndOutputs(req,res);
+    var totalyear = await mouvementController.getTotalInputsOutputsByYear(req,res);
+    res.render(__dirname + "/views/guest/home.ejs", {data: data, situation: totals, totalyear: totalyear});
 });
 
 app.post('/guest/home', async function(req,res) {
@@ -198,4 +201,11 @@ app.get('/scripts/script.js', (req, res) => {
     res.set('Content-Type', 'text/javascript');
     // Envoyez le fichier script.js
     res.sendFile(path.join(__dirname, 'scripts', 'script.js'));
+});
+
+app.get('/style/style.js', (req, res) => {
+    // Spécifiez le type MIME approprié pour les fichiers JavaScript
+    res.set('Content-Type', 'text/html');
+    // Envoyez le fichier script.js
+    res.sendFile(path.join(__dirname, 'style', 'style.js'));
 });

@@ -6,28 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Liste par mois</title>
 </head>
+<link rel="stylesheet" href="/style.css">
 
 <body>
-    <h2>
+    <h1>
         <p id="prenom"> </p>
-    </h2>
-    <p>Liste des mouvements pour l' année <%= data.year %>
-    </p>
+    </h1>
 
     <a href="/admin/view/insert/user">Ajouter membre</a>
 
     <a href="/admin/table">voir table</a>
-    <a href="/admin/unpaid">voir liste de ceux qui n'ont pas payé</a>
+    <!-- <a href="/admin/unpaid">voir liste de ceux qui n'ont pas payé</a> -->
     <a href="/insert/depense">Ajouter dépenses</a>
     <a href="/admin/depenses">liste des dépenses</a>
     <a href="/admin/allcotisation">liste cotisations</a>
-
-    <p>Total des cotisations <%= situation.totalInput %>Ar</p>
-    <p>Total des dépenses <%= situation.totalOutput %>Ar</p>
-
+    
     <button id="logout-button">Se déconnecter</button>
+    <h3>Total des cotisations <%= situation.totalInput %>Ar</h3>
+    <h3>Total des dépenses <%= situation.totalOutput %>Ar</h3>
 
-    <table border="1">
+
+    <center><table border="1" class="smaller-table">
         <thead>
             <tr>
                 <th>Année</th>
@@ -51,90 +50,7 @@
                 <% }); %>
         </tbody>
     </table>
-
-    <form action="/admin/home" method="post">
-        <select name="year" id="">
-            <option value="">année</option>
-            <option value="2020">2020</option>
-            <option value="2021">2021</option>
-            <option value="2022">2022</option>
-            <option value="2023">2023</option>
-            <option value="2024">2024</option>
-            <option value="2025">2025</option>
-            <option value="2026">2026</option>
-            <option value="2027">2027</option>
-            <option value="2028">2028</option>
-            <option value="2029">2029</option>
-            <option value="2030">2030</option>
-        </select>
-
-        <input type="submit" value="filtrer">
-    </form>
-
-    <table class="move-table" border="1">
-        <thead>
-            <tr>
-                <th></th>
-                <th>nom</th>
-                <th>prenom</th>
-                <th>matricule</th>
-                <th>Entrée</th>
-                <th>Sortie</th>
-                <th>Solde</th>
-            </tr>
-        </thead>
-        <tbody>
-            <%
-                total_entre = 0
-                total_sortie = 0
-                total_solde = 0
-                data.user_info.forEach(mouvement => { 
-                    
-                    total_entre = total_entre+mouvement.totalInput
-                    total_sortie = total_sortie+mouvement.totalOutput
-                    total_solde = total_solde+mouvement.difference
-            %>
-                <tr>
-                    <td><a
-                            href="/insert/mouvement/<%= mouvement.user_id %>/<%= mouvement.name %>/<%= mouvement.prenom %>">insérer
-                            mouvement</a></td>
-                    <td><a href="/admin/singleUser/<%= mouvement.user_id %>">
-                            <%= mouvement.name %>
-                        </a></td>
-                    <td>
-                        <%= mouvement.prenom %>
-                    </td>
-                    <td>
-                        <%= mouvement.matricule %>
-                    </td>
-                    <td>
-                        <%= mouvement.totalInput %>
-                    </td>
-                    <td>
-                        <%= mouvement.totalOutput %>
-                    </td>
-                    <td>
-                        <%= mouvement.difference %>
-                    </td>
-                </tr>
-                <% }); %>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td><b>total</b></td>
-                        <td>
-                            <%= total_entre %>
-                        </td>
-                        <td>
-                            <%= total_sortie %>
-                        </td>
-                        <td>
-                            <%= total_solde %>
-                        </td>
-                    </tr>
-        </tbody>
-    </table>
+    </center>
 
     <input type="text" id="hiddenPrenom" name="prenom" hidden>
     <input type="text" id="hiddenId" name="user_id" hidden>

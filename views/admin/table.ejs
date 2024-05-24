@@ -6,25 +6,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Liste par mois</title>
 </head>
+<link rel="stylesheet" href="/style.css">
+
 
 <body>
-    <h2>
+    <h1>
         <p id="prenom"> </p>
-    </h2>
-    <p>Liste des mouvements pour l' année <%= data.year %>
-    </p>
-
+    </h1>
+    
     <a href="/admin/view/insert/user">Ajouter membre</a>
-
+    
     <a href="/insert/depense">Ajouter dépenses</a>
     <a href="/admin/home">retour accueil</a>
-
-    <p>Total des cotisations <%= situation.totalInput %>Ar</p>
-    <p>Total des dépenses <%= situation.totalOutput %>Ar</p>
-
+    
     <button id="logout-button">Se déconnecter</button>
-
-    <form action="/admin/table" method="post">
+    
+    
+    
+    <h2>Table des cotisations pour l' année <%= data.year %></h2>
+    <form action="/admin/table" method="post" class="filter-form">
         <select name="year" id="">
             <option value="">année</option>
             <option value="2020">2020</option>
@@ -39,10 +39,12 @@
             <option value="2029">2029</option>
             <option value="2030">2030</option>
         </select>
-
+        
         <input type="submit" value="filtrer">
     </form>
-
+    <h3>Total des cotisations <%= situation.totalInput %>Ar</h3>
+    <h3>Total des dépenses <%= situation.totalOutput %>Ar</h3>
+    
     <table class="move-table" border="1">
         <thead>
             <tr>
@@ -50,22 +52,26 @@
                 <th>Nom</th>
                 <th>Prenom</th>
                 <th>Matricule</th>
-                <th>Jan</th>
-                <th>Fév</th>
-                <th>Mar</th>
-                <th>Avr</th>
+                <th>Janvier</th>
+                <th>Février</th>
+                <th>Mars</th>
+                <th>Avril</th>
                 <th>Mai</th>
                 <th>Juin</th>
-                <th>Juil</th>
-                <th>Aoû</th>
-                <th>Sep</th>
-                <th>Oct</th>
-                <th>Nov</th>
-                <th>Déc</th>
+                <th>Juillet</th>
+                <th>Août</th>
+                <th>Septembre</th>
+                <th>Octobre</th>
+                <th>Novembre</th>
+                <th>Décembre</th>
+                <th>Total</th>
             </tr>
         </thead>
         <tbody>
-            <% data.results.forEach(mouvement => { %>
+            <% 
+                total_per_month = [0,0,0,0,0,0,0,0,0,0,0,0]
+                data.results.forEach(mouvement => { 
+            %>
                 <tr>
                     <td><a
                             href="/insert/mouvement/<%= mouvement.user_id %>/<%= mouvement.name %>/<%= mouvement.prenom %>">ajouter cotisation</a></td>
@@ -78,13 +84,39 @@
                     <td>
                         <%= mouvement.matricule %>
                     </td>
-                    <% mouvement.monthlyInputs.forEach(mvt => { %>
+                    <% 
+                        total_user = 0
+                        mouvement.monthlyInputs.forEach(mvt => { 
+                            total_user = total_user + mvt.total
+                            total_per_month[mvt.month-1] = total_per_month[mvt.month-1] + mvt.total
+                    %>
                         <td>
                             <%= mvt.total %>
                         </td>
+                        
                         <% }); %>
+                    <td>
+                        <%= total_user %>
+                    </td>
                 </tr>
                 <% }); %>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td><b>Total</b></td>
+                    <% 
+                        total = 0
+                        total_per_month.forEach(mvt => { 
+                            total = total + mvt
+                    %>
+                        <td>
+                            <%= mvt %>
+                        </td>
+                        <% }); %>
+                    <td>
+                        <%= total %>
+                    </td>
         </tbody>
     </table>
 
