@@ -18,12 +18,13 @@
     <a href="/admin/table">voir table</a>
     <!-- <a href="/admin/unpaid">voir liste de ceux qui n'ont pas payé</a> -->
     <a href="/insert/depense">Ajouter dépenses</a>
+    <a href="/insert/annexe">Ajouter recette annexe</a>
     <a href="/admin/depenses">liste des dépenses</a>
+    <a href="/admin/annexes">liste des recettes annexes</a>
     <a href="/admin/allcotisation">liste cotisations</a>
     
     <button id="logout-button">Se déconnecter</button>
-    <h3>Total des cotisations <%= situation.totalInput %>Ar</h3>
-    <h3>Total des dépenses <%= situation.totalOutput %>Ar</h3>
+    
 
 
     <center><table border="1" class="smaller-table">
@@ -31,7 +32,9 @@
             <tr>
                 <th>Année</th>
                 <th>Total cotisation</th>
+                <th>Total recette annexe</th>
                 <th>Total dépenses</th>
+                <th>Total</th>
             </tr>
         </thead>
         <tbody>
@@ -44,10 +47,21 @@
                         <%= total.totalInput %>
                     </td>
                     <td>
+                        <%= total.totalAnnexe %>
+                    <td>
                         <%= total.totalOutput %>
                     </td>
+                    <td>
+                        <%= total.totalInput-total.totalOutput %>
                 </tr>
                 <% }); %>
+                <tr>
+                    <td><h3>Total</h3></td>
+                    <td><h3> <%= situation.totalInput %></h3></td>
+                    <td><h3><%= situation.totalAnnexe %></h3></td>
+                    <td><h3><%= situation.totalOutput %></h3></td>
+                    <td><h3><%= situation.totalInput-situation.totalOutput %></h3></td>
+                </tr>
         </tbody>
     </table>
     </center>

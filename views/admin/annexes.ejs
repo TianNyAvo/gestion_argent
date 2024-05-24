@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+    
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Liste par mois</title>
+    </head>
+<link rel="stylesheet" href="/style.css">
+
+    
+    <body>
+        
+    <h3>Liste des recettes annexe pour l' année <%= data.year %></h3>
+    
+
+    <a href="/insert/annexe">Ajouter dépenses</a>
+    <a href="/admin/home">retour accueil</a>
+    
+    <button id="logout-button">Se déconnecter</button>
+    
+    <form action="/admin/annexes" method="post" class="filter-form">
+        <select name="year" id="">
+            <option value="">année</option>
+            <option value="2020">2020</option>
+            <option value="2021">2021</option>
+            <option value="2022">2022</option>
+            <option value="2023">2023</option>
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+            <option value="2026">2026</option>
+            <option value="2027">2027</option>
+            <option value="2028">2028</option>
+            <option value="2029">2029</option>
+            <option value="2030">2030</option>
+        </select>
+    
+        <input type="submit" value="filtrer">
+    </form>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>date</th>
+                <th>Libellé</th>
+                <th>Montant</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% 
+                total = 0
+                data.annexes.forEach(depense => { 
+                    total = total+depense.montant
+            %>
+                <tr>
+                    <td>
+                        <%= depense.date %>
+                    </td>
+                    <td>
+                        <%= depense.description %>
+                    </td>
+                    <td>
+                        <%= depense.montant %>
+                    </td>
+                </tr>
+                <% }); %>
+                <tr>
+                    <td></td>
+                    <td><b>total</b></td>
+                    <td>
+                        <%= total %>
+                    </td>
+                </tr>
+        </tbody>
+    </table>
+
+</body>
+
+</html>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Vérifie si des données existent dans le localStorage
+        if (localStorage.getItem('user_info')) {
+            // Récupère les données du localStorage et les convertit en objet JavaScript
+            var userData = JSON.parse(localStorage.getItem('user_info'));
+
+            // Affiche les données dans la console
+            console.log('Données utilisateur:', userData);
+
+            // Ajoute les données à un champ hidden d'un formulaire avec l'ID "hiddenInput"
+            // document.getElementById('prenom').textContent = "Bienvenue " + userData.prenom;
+        }
+        else {
+            console.log('Aucune donnée utilisateur trouvée dans le localStorage.');
+        }
+    });
+
+    document.getElementById('logout-button').addEventListener('click', function () {
+        localStorage.removeItem('user_info');
+        window.location.href = '/';
+    });
+
+</script>

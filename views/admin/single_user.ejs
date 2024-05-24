@@ -10,6 +10,7 @@
 <body>
     <h2>Résumé de <%= data.user.name %> <%= data.user.prenom %> matricule <%= data.user.matricule %> pour l'année <%= data.year %></h2>
     <a href="/admin/home">retour à l'accueil</a>
+    <a href="/admin/table">voir table</a>
     <button id="logout-button">Se déconnecter</button>
 
     <form action="/admin/singleUser" method="post">
@@ -36,8 +37,9 @@
     <table class="move-table" border="1" >
         <thead>
             <tr>
-                <th>mois</th>
-                <th>entrée</th>
+                <th>date</th>
+                <th>Montant</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -45,11 +47,12 @@
                 total_entre = 0
                 data.movements.forEach(mouvement => { 
                     
-                    total_entre = total_entre+mouvement.totalInput
+                    total_entre = total_entre+mouvement.montant
             %>
                 <tr>
-                    <td><%= mouvement.month %></td>
-                    <td><%= mouvement.totalInput %></td>
+                    <td><%= mouvement.date %></td>
+                    <td><%= mouvement.montant %></td>
+                    <td><a href="/admin/update/mouvement/<%= mouvement._id %>">modifier</a></td>
                 </tr>
             <% }) %>
             <tr>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modifer cotisation</title>
+</head>
+<link rel="stylesheet" href="/style.css">
+
+
+<body>
+    <h3>Modifier cotisation </h3>
+
+    <a href="/admin/home">retour à l'accueil</a>
+    <a href="/admin/table">voir table</a>
+
+    <button id="logout-button">Se déconnecter</button>
+
+    <form action="/admin/update/mouvement" method="post">
+        <p>Date</p>
+        <input type="date" name="date" id="" value="<%= data.date %>">
+
+        <p>Montant</p>
+        <input type="number" name="montant" id="" value="<%= data.montant %>">
+
+        <input type="text" name="type" id="" value="input" hidden>
+
+        <p>Commentaire</p>
+        <textarea type="text" name="description" id=""> </textarea>
+
+
+        <input type="text" name="_id" value="<%= data._id %>" hidden>
+        <input type="text" name="user_id" value="<%= data.user_id %>" hidden>
+
+        <input type="submit" value="valider">
+
+    </form>
+
+</body>
+
+</html>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Vérifie si des données existent dans le localStorage
+        if (localStorage.getItem('user_info')) {
+            // Récupère les données du localStorage et les convertit en objet JavaScript
+            var userData = JSON.parse(localStorage.getItem('user_info'));
+
+            // Affiche les données dans la console
+            console.log('Données utilisateur:', userData);
+
+            // Ajoute les données à un champ hidden d'un formulaire avec l'ID "hiddenInput"
+            document.getElementById('hiddenPrenom').value = userData.prenom;
+            document.getElementById('hiddenId').value = userData._id;
+        } else {
+            console.log('Aucune donnée utilisateur trouvée dans le localStorage.');
+        }
+    });
+
+    document.getElementById('logout-button').addEventListener('click', function() {
+        localStorage.removeItem('user_info');
+        window.location.href = '/';
+    });
+
+</script>

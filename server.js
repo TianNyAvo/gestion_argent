@@ -100,6 +100,11 @@ app.post('/admin/depenses', async function(req,res) {
     res.render(__dirname + "/views/admin/depenses.ejs", {data: data});
 });
 
+app.get('/admin/annexes', async function(req,res) {
+    const data = await mouvementController.getAnnexesByYear(req,res);
+    res.render(__dirname + "/views/admin/annexes.ejs", {data: data});
+});
+
 app.get('/admin/allcotisation', async function(req,res) {
     const data = await mouvementController.getAllCotisationsByYear(req,res);
     res.render(__dirname + "/views/admin/cotisation.ejs", {data: data});
@@ -190,12 +195,27 @@ app.get('/insert/depense', function (req,res) {
     res.sendFile(__dirname + "/views/admin/insert_depense.html")
 });
 
+app.get('/insert/annexe', function (req,res) {
+    res.sendFile(__dirname + "/views/admin/insert_annexe.html")
+});
+
 app.post('/insert/mouvement', function (req,res) {
     console.log(req.body);
     mouvementController.insertMouvement(req,res);
     res.redirect('/admin/home');
 });
 
+app.get('/admin/update/mouvement/:id', async function (req,res) {
+    const data = await mouvementController.getById(req,res);
+    console.log('data',data );
+    res.render(__dirname + "/views/admin/update_movement.ejs", {data: data});
+});
+
+app.post('/admin/update/mouvement', async function (req,res) {
+    const data = await mouvementController.updateMouvement(req,res);
+    res.redirect('/admin/singleUser/'+data.user_id);
+});
+ 
 app.get('/scripts/script.js', (req, res) => {
     // Spécifiez le type MIME approprié pour les fichiers JavaScript
     res.set('Content-Type', 'text/javascript');
