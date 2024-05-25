@@ -121,6 +121,9 @@ exports.getAllUserCotisation = async (year) => {
     try {
         const results = await User.aggregate([
             {
+                {
+                    $match: { role: "guest" }
+                },
                 $lookup: {
                     from: 'mouvements',
                     let: { userId: '$_id' },
