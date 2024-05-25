@@ -26,6 +26,16 @@ const userSchema = new Schema({
         required: true,
         unique: true
     },
+    last_year:{
+        type: Number,
+        required: false,
+        default: null
+    },
+    last_month:{
+        type: Number,
+        required: false,
+        default: null
+    }
   });
 
 const User = mongoose.model('users', userSchema);
@@ -42,7 +52,9 @@ exports.insertUser = async (req) => {
         name: req.name,
         prenom: req.prenom,
         mdp: req.mdp ? req.mdp : "fgk$yergpojf",
-        matricule: req.matricule
+        matricule: req.matricule,
+        last_year: req.last_year? req.last_year : null,
+        last_month: req.last_month? req.last_month : null
     });
     const {db, client} = await dbServices.connectToDatabase();
     // const collection = db.collection('users');
@@ -249,6 +261,8 @@ exports.getUserCotisation = async (userId, year) => {
                     name: 1,
                     prenom: 1,
                     matricule: 1,
+                    last_year: 1,
+                    last_month: 1,
                     monthlyInputs: 1
                 }
             }

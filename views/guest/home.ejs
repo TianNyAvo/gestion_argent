@@ -114,9 +114,30 @@
                         data.results.monthlyInputs.forEach(mvt => { 
                             total_user = total_user + mvt.total
                     %>
-                        <td>
-                            <%= mvt.total %>
-                        </td>
+
+                            <% if(data.year < data.results.last_year){ %>
+                                <td style="background-color: rgba(126, 242, 118, 0.659);">
+                                    <%= mvt.total %>
+                                </td>
+                            <% } else {%> 
+                                <% if(data.results.last_year == data.year){ %>
+                                    <% if(mvt.month <= data.results.last_month) { %>
+                                        <td style="background-color: rgba(126, 242, 118, 0.659);">
+                                            <%= mvt.total %>
+                                        </td>
+                                    <% } else { %>
+                                        <td>
+                                            <%= mvt.total %>
+                                        </td>
+                                    <% } %>
+                                <% } else { %>
+                                    <% if (data.results.last_year < data.year){ %>
+                                        <td>
+                                            <%= mvt.total %>
+                                        </td>
+                                    <% } %>
+                                <% } %>
+                            <% } %>
                         
                         <% }); %>
                     <td>
