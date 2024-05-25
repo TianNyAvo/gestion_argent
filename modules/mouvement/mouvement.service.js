@@ -32,7 +32,7 @@ const mouvementSchema = new Schema({
 
 const Mouvement = mongoose.model('mouvement', mouvementSchema);
 
-mongoose.connect("mongodb+srv://tandriatoavina:<password>@tiancluster.1h72rz3.mongodb.net/?retryWrites=true&w=majority&appName=TianCluster/gestion_argent", {
+mongoose.connect("mongodb+srv://tandriatoavina:<password>@tiancluster.1h72rz3.mongodb.net/gestion_argent?retryWrites=true&w=majority&appName=TianCluster", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     bufferTimeoutMS: 60000, // Set bufferTimeoutMS to 60 seconds
