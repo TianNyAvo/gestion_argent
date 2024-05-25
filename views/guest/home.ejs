@@ -20,33 +20,36 @@
             <tr>
                 <th>Année</th>
                 <th>Total cotisation</th>
+                <th>Total recette annexe</th>
                 <th>Total dépenses</th>
-                <th>Situation</th>
+                <th>Total</th>
             </tr>
         </thead>
         <tbody>
             <% totalyear.forEach(total => { %>
                 <tr>
                     <td>
-                        <b><%= total.year %></b>
+                        <%= total.year %>
                     </td>
                     <td>
                         <%= total.totalInput %>
                     </td>
                     <td>
+                        <%= total.totalAnnexe %>
+                    <td>
                         <%= total.totalOutput %>
                     </td>
                     <td>
                         <%= total.totalInput-total.totalOutput %>
-                    </td>
                 </tr>
                 <% }); %>
-            <tr>
-                <td><h3>Total</h3></td>
-                <td><h3> <%= situation.totalInput %></h3></td>
-                <td><h3><%= situation.totalOutput %></h3></td>
-                <td><h3><%= situation.totalInput-situation.totalOutput %></h3></td>
-            </tr>
+                <tr>
+                    <td><h3>Total</h3></td>
+                    <td><h3> <%= situation.totalInput %></h3></td>
+                    <td><h3><%= situation.totalAnnexe %></h3></td>
+                    <td><h3><%= situation.totalOutput %></h3></td>
+                    <td><h3><%= situation.totalInput-situation.totalOutput %></h3></td>
+                </tr>
         </tbody>
     </table>
     </center>
@@ -77,7 +80,7 @@
     <table border="1" class="smaller-table">
         <thead>
             <tr>
-                <th>mois</th>
+                <th>date</th>
                 <th>entrée</th>
             </tr>
         </thead>
@@ -90,10 +93,10 @@
             %>
                 <tr>
                     <td>
-                        <%= mouvement.month %>
+                        <%= mouvement.date %>
                     </td>
                     <td>
-                        <%= mouvement.totalInput %>
+                        <%= mouvement.montant %>
                     </td>
 
                 </tr>

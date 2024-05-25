@@ -166,12 +166,15 @@ app.get('/guest/home/:user_id', async function(req,res) {
     var data = await mouvementController.getSingleUserMovement(req,res);
     var totals = await mouvementController.getTotalInputsAndOutputs(req,res);
     var totalyear = await mouvementController.getTotalInputsOutputsByYear(req,res);
+    console.log("data", data);
     res.render(__dirname + "/views/guest/home.ejs", {data: data, situation: totals, totalyear: totalyear});
 });
 
 app.post('/guest/home', async function(req,res) {
     var data = await mouvementController.getSingleUserMovement(req,res);
-    res.render(__dirname + "/views/guest/home.ejs", {data: data});
+    var totals = await mouvementController.getTotalInputsAndOutputs(req,res);
+    var totalyear = await mouvementController.getTotalInputsOutputsByYear(req,res);
+    res.render(__dirname + "/views/guest/home.ejs", {data: data, situation: totals, totalyear: totalyear});
 });
 
 app.post('/login/user', async function (req,res) {
