@@ -63,7 +63,7 @@ exports.getSingleUserMovement = async (req, res) => {
 exports.getTotalInputsAndOutputs = async (req,res) => {
     try {
         const year = req.body.year;
-        const result = await mouvementService.getTotalInputsAndOutputs(year);
+        const result = await mouvementService.getTotalInputsAndOutputs();
         return result;
     }
     catch (error) {

@@ -44,6 +44,33 @@ exports.getAllUserCotisation = async (req, res) => {
     }
 };
 
+exports.getUserCotisation = async (req, res) => {
+    try {
+        var user_id = "";
+        if (req.body.user_id != "" && req.body.user_id != null) {
+            user_id = req.body.user_id;
+        }
+        else if (req.params.user_id != "" && req.params.user_id != null) {
+            user_id = req.params.user_id;
+        }
+        else{
+            return res.status(400).json({ error: "user_id is required" });
+        }
+        var year = "";
+        if (req.body.year != "" && req.body.year != null) {
+            year = Number.parseInt(req.body.year);
+        }
+        else {
+            year = new Date().getFullYear();
+        }
+        const result = await userServices.getUserCotisation(user_id, year);
+        return result;
+    } catch (error) {
+        console.error('Error getting user cotisation:', error);
+        res.status(500).json({ error: error });
+    }
+};
+
 exports.getUserMovementsByYear = async (req, res) => {
     try {
         var year = "";

@@ -44,11 +44,11 @@
                 </tr>
                 <% }); %>
                 <tr>
-                    <td><h3>Total</h3></td>
+                    <td><h3>Total en Ar</h3></td>
                     <td><h3> <%= situation.totalInput %></h3></td>
                     <td><h3><%= situation.totalAnnexe %></h3></td>
                     <td><h3><%= situation.totalOutput %></h3></td>
-                    <td><h3><%= situation.totalInput-situation.totalOutput %></h3></td>
+                    <td><h3><%= (situation.totalInput+situation.totalAnnexe)-situation.totalOutput %></h3></td>
                 </tr>
         </tbody>
     </table>
@@ -76,40 +76,56 @@
     </form>
 
 
-    <center>
-    <table border="1" class="smaller-table">
+    <center><div class="table-container"><table class="move-table" border="1">
         <thead>
             <tr>
-                <th>date</th>
-                <th>entrée</th>
+                <th>Nom</th>
+                <th>Prenom</th>
+                <th>Matricule</th>
+                <th>Janvier</th>
+                <th>Février</th>
+                <th>Mars</th>
+                <th>Avril</th>
+                <th>Mai</th>
+                <th>Juin</th>
+                <th>Juillet</th>
+                <th>Août</th>
+                <th>Septembre</th>
+                <th>Octobre</th>
+                <th>Novembre</th>
+                <th>Décembre</th>
+                <th>Total</th>
             </tr>
         </thead>
         <tbody>
-            <%
-                total_entre = 0
-                data.movements.forEach(mouvement => { 
-                    
-                    total_entre = total_entre+mouvement.totalInput
-            %>
                 <tr>
+                    
                     <td>
-                        <%= mouvement.date %>
+                        <%= data.results.name %>
                     </td>
                     <td>
-                        <%= mouvement.montant %>
+                        <%= data.results.prenom %>
                     </td>
-
-                </tr>
-                <% }) %>
-                    <tr>
-                        <td><b>total</b></td>
+                    <td>
+                        <%= data.results.matricule %>
+                    </td>
+                    <% 
+                         total_user = 0
+                        data.results.monthlyInputs.forEach(mvt => { 
+                            total_user = total_user + mvt.total
+                    %>
                         <td>
-                            <%= total_entre %>
+                            <%= mvt.total %>
                         </td>
-                    </tr>
+                        
+                        <% }); %>
+                    <td>
+                        <b><%= total_user %></b>
+                    </td>
+                </tr>
+                
         </tbody>
-    </table>
-</center>
+    </table></div></center>
 </body>
 
 </html>

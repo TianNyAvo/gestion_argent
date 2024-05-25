@@ -56,11 +56,11 @@
                 </tr>
                 <% }); %>
                 <tr>
-                    <td><h3>Total</h3></td>
+                    <td><h3>Totaux en Ar</h3></td>
                     <td><h3> <%= situation.totalInput %></h3></td>
                     <td><h3><%= situation.totalAnnexe %></h3></td>
                     <td><h3><%= situation.totalOutput %></h3></td>
-                    <td><h3><%= situation.totalInput-situation.totalOutput %></h3></td>
+                    <td><h3><%= (situation.totalInput+situation.totalAnnexe)-(situation.totalOutput) %></h3></td>
                 </tr>
         </tbody>
     </table>

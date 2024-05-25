@@ -163,7 +163,7 @@ app.post('/admin/insert/user', async function (req,res) {
 });
 
 app.get('/guest/home/:user_id', async function(req,res) {
-    var data = await mouvementController.getSingleUserMovement(req,res);
+    var data = await userController.getUserCotisation(req,res);
     var totals = await mouvementController.getTotalInputsAndOutputs(req,res);
     var totalyear = await mouvementController.getTotalInputsOutputsByYear(req,res);
     console.log("data", data);
@@ -171,7 +171,8 @@ app.get('/guest/home/:user_id', async function(req,res) {
 });
 
 app.post('/guest/home', async function(req,res) {
-    var data = await mouvementController.getSingleUserMovement(req,res);
+    console.log('request',req.body);
+    var data = await userController.getUserCotisation(req,res);
     var totals = await mouvementController.getTotalInputsAndOutputs(req,res);
     var totalyear = await mouvementController.getTotalInputsOutputsByYear(req,res);
     res.render(__dirname + "/views/guest/home.ejs", {data: data, situation: totals, totalyear: totalyear});

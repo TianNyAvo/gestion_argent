@@ -183,6 +183,89 @@ exports.getAllUserCotisation = async (year) => {
     }
 };
 
+exports.getUserCotisation = async (userId, year) => {
+    console.log('year:', year);
+    try {
+        const results = await User.aggregate([
+            {
+                $match: { _id: mongoose.Types.ObjectId(userId) }
+            },
+            {
+                $lookup: {
+                    from: 'mouvements',
+                    let: { userId: '$_id' },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: {
+                                    $and: [
+                                        { $eq: ['$user_id', '$$userId'] },
+                                        { $eq: [{ $year: '$date' }, year] },
+                                        { $eq: ['$type', 'input'] }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            $group: {
+                                _id: { month: { $month: '$date' } },
+                                totalMontant: { $sum: '$montant' }
+                            }
+                        }
+                    ],
+                    as: 'mouvements'
+                }
+            },
+            {
+                $addFields: {
+                    monthlyInputs: {
+                        $map: {
+                            input: { $range: [1, 13] },
+                            as: 'month',
+                            in: {
+                                month: '$$month',
+                                total: {
+                                    $reduce: {
+                                        input: '$mouvements',
+                                        initialValue: 0,
+                                        in: {
+                                            $cond: [
+                                                { $eq: ['$$this._id.month', '$$month'] },
+                                                { $add: ['$$value', '$$this.totalMontant'] },
+                                                '$$value'
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    user_id: '$_id',
+                    name: 1,
+                    prenom: 1,
+                    matricule: 1,
+                    monthlyInputs: 1
+                }
+            }
+        ]);
+
+        console.log('User cotisations:', results[0]);
+
+        return {
+            year: year,
+            results: results[0]
+        };
+    } catch (error) {
+        console.error('Error fetching user movements:', error);
+        throw error;
+    }
+};
+
 exports.getUserMovementsByMonthYear = async (month, year) => {
     var resultat = {};
     const startDate = new Date(year, month - 1, 1);
