@@ -90,11 +90,33 @@
                             total_user = total_user + mvt.total
                             total_per_month[mvt.month-1] = total_per_month[mvt.month-1] + mvt.total
                     %>
-                        <td>
-                            <%= mvt.total %>
-                        </td>
+                        <% if(data.year < mouvement.last_year){ %>
+                                <td style="background-color: rgba(126, 242, 118, 0.659);">
+                                    <%= mvt.total %>
+                                </td>
+                            <% } else {%> 
+                                <% if(mouvement.last_year == data.year){ %>
+                                    <% if(mvt.month <= mouvement.last_month) { %>
+                                        <td style="background-color: rgba(126, 242, 118, 0.659);">
+                                            <%= mvt.total %>
+                                        </td>
+                                    <% } else { %>
+                                        <td>
+                                            <%= mvt.total %>
+                                        </td>
+                                    <% } %>
+                                <% } else { %>
+                                    <% if (mouvement.last_year < data.year){ %>
+                                        <td>
+                                            <%= mvt.total %>
+                                        </td>
+                                    <% } %>
+                                <% } %>
+                            <% } %>
                         
                         <% }); %>
+                        
+                        
                     <td>
                         <b><%= total_user %></b>
                     </td>

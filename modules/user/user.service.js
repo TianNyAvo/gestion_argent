@@ -179,12 +179,14 @@ exports.getAllUserCotisation = async (year) => {
                     name: 1,
                     prenom: 1,
                     matricule: 1,
+                    last_year: 1,
+                    last_month: 1,
                     monthlyInputs: 1
                 }
             }
         ]);
 
-        console.log('All user cotisations:', results);
+        console.log('All user cotisations:', results[0].monthlyInputs);
         return {
             year: year,
             results: results
