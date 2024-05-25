@@ -70,6 +70,13 @@ table {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+.table-container {
+    width: 90%;
+    /* height: 100%; */
+    overflow-x: auto;
+    /* overflow-x: auto; */
+}
+
 th, td {
     padding: 12px;
     border: 1px solid #ddd;
@@ -137,4 +144,15 @@ input[type="submit"]:hover {
     background-color: #fff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+    .filter-form {
+        max-width: 100%;
+        padding: 10px;
+    }
+
+    .smaller-table {
+        width: 100%;
+    }
 }

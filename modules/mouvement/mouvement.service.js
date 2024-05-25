@@ -239,6 +239,9 @@ exports.getTotalInputsOutputsByYear = async () => {
                         }
                     }
                 }
+            },
+            {
+                $sort: { year: -1 }  // Sort by year in descending order
             }
         ]);
 
@@ -249,7 +252,7 @@ exports.getTotalInputsOutputsByYear = async () => {
         console.error('Error calculating totals by year:', error);
         throw error;
     }
-}
+};
 
 exports.getSingleUserMovements = async (userId, year) => {
     try {

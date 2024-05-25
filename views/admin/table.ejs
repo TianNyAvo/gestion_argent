@@ -42,10 +42,10 @@
         
         <input type="submit" value="filtrer">
     </form>
-    <h3>Total des cotisations <%= situation.totalInput %>Ar</h3>
-    <h3>Total des dépenses <%= situation.totalOutput %>Ar</h3>
+    <!-- <h3>Total des cotisations <%= situation.totalInput %>Ar</h3>
+    <h3>Total des dépenses <%= situation.totalOutput %>Ar</h3> -->
     
-    <table class="move-table" border="1">
+    <center><div class="table-container"><table class="move-table" border="1">
         <thead>
             <tr>
                 <th></th>
@@ -96,11 +96,11 @@
                         
                         <% }); %>
                     <td>
-                        <%= total_user %>
+                        <b><%= total_user %></b>
                     </td>
                 </tr>
                 <% }); %>
-                <tr>
+                <tr style="color: red;">
                     <td></td>
                     <td></td>
                     <td></td>
@@ -111,14 +111,14 @@
                             total = total + mvt
                     %>
                         <td>
-                            <%= mvt %>
+                            <b><%= mvt %></b>
                         </td>
                         <% }); %>
                     <td>
-                        <%= total %>
+                        <b><%= total %></b>
                     </td>
         </tbody>
-    </table>
+    </table></div></center>
 
     <input type="text" id="hiddenPrenom" name="prenom" hidden>
     <input type="text" id="hiddenId" name="user_id" hidden>

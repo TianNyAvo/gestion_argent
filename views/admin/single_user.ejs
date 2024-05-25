@@ -34,7 +34,7 @@
         <input type="submit" value="filtrer">
     </form>
 
-    <table class="move-table" border="1" >
+    <center><table class="smaller-table" border="1" >
         <thead>
             <tr>
                 <th>date</th>
@@ -55,12 +55,13 @@
                     <td><a href="/admin/update/mouvement/<%= mouvement._id %>">modifier</a></td>
                 </tr>
             <% }) %>
-            <tr>
+            <tr style="color: red;">
                 <td><b>total</b></td>
                 <td><%= total_entre %></td>
+                <td></td>
             </tr>
         </tbody>
-    </table>
+    </table></center>
 </body>
 </html>
 

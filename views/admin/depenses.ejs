@@ -38,12 +38,13 @@
         <input type="submit" value="filtrer">
     </form>
 
-    <table border="1">
+    <center><table border="1" class="smaller-table">
         <thead>
             <tr>
                 <th>date</th>
                 <th>Libellé</th>
                 <th>Montant</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -62,6 +63,7 @@
                     <td>
                         <%= depense.montant %>
                     </td>
+                    <td><a href="/admin/update/depense/<%= depense._id %>">modifier</a></td>
                 </tr>
                 <% }); %>
                 <tr>
@@ -70,9 +72,10 @@
                     <td>
                         <%= total %>
                     </td>
+                    <td></td>
                 </tr>
         </tbody>
-    </table>
+    </table></center>
 
 </body>
 

@@ -211,9 +211,31 @@ app.get('/admin/update/mouvement/:id', async function (req,res) {
     res.render(__dirname + "/views/admin/update_movement.ejs", {data: data});
 });
 
+app.get('/admin/update/depense/:id', async function (req,res) {
+    const data = await mouvementController.getById(req,res);
+    console.log('data',data );
+    res.render(__dirname + "/views/admin/update_depense.ejs", {data: data});
+});
+
+app.get('/admin/update/annexe/:id', async function (req,res) {
+    const data = await mouvementController.getById(req,res);
+    console.log('data',data );
+    res.render(__dirname + "/views/admin/update_annexe.ejs", {data: data});
+});
+
 app.post('/admin/update/mouvement', async function (req,res) {
     const data = await mouvementController.updateMouvement(req,res);
     res.redirect('/admin/singleUser/'+data.user_id);
+});
+
+app.post('/admin/update/depense', async function (req,res) {
+    const data = await mouvementController.updateMouvement(req,res);
+    res.redirect('/admin/depenses/');
+});
+
+app.post('/admin/update/annexe', async function (req,res) {
+    const data = await mouvementController.updateMouvement(req,res);
+    res.redirect('/admin/annexes/');
 });
  
 app.get('/scripts/script.js', (req, res) => {
