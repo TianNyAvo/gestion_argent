@@ -148,6 +148,7 @@ exports.getTotalInputsAndOutputs = async (year = null) => {
 
         var totalInput = 0;
         var totalOutput = 0;
+        var totalAnnexe = 0;
         console.log("result total", result);
 
         result.forEach(item => {
