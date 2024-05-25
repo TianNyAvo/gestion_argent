@@ -39,7 +39,7 @@ const userSchema = new Schema({
   });
 
 const User = mongoose.model('users', userSchema);
-mongoose.connect("mongodb+srv://tandriatoavina:<password>@tiancluster.1h72rz3.mongodb.net/?retryWrites=true&w=majority&appName=TianClustergestion_argent", {
+mongoose.connect("mongodb+srv://tandriatoavina:<password>@tiancluster.1h72rz3.mongodb.net/?retryWrites=true&w=majority&appName=TianCluster/gestion_argent", {
   useNewUrlParser: true,
   bufferTimeoutMS: 60000, // Set bufferTimeoutMS to 60 seconds
 });
