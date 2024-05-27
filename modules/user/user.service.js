@@ -189,7 +189,7 @@ exports.getAllUserCotisation = async (year) => {
             }
         ]);
 
-        console.log('All user cotisations:', results[0].monthlyInputs);
+        // console.log('All user cotisations:', results[0].monthlyInputs);
         return {
             year: year,
             results: results
