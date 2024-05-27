@@ -51,7 +51,7 @@ app.get('/signup', function (req,res) {
 
 app.post('/signup/user', async function (req,res) {
     // console.log(req.body);
-    var user = await userController.insertUser(req,res);
+    var user = await userController.signup(req,res);
     res.status(200).json(user);
 });
 

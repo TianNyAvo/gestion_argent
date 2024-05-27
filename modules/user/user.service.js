@@ -49,8 +49,8 @@ exports.User = User;
 exports.insertUser = async (req) => {
     const user = new User({
         role: "guest",
-        name: req.name,
-        prenom: req.prenom,
+        name: req.name ? req.name : "nom",
+        prenom: req.prenom ? req.prenom : "prenom",
         mdp: req.mdp ? req.mdp : "fgk$yergpojf",
         matricule: req.matricule,
         last_year: req.last_year? req.last_year : null,
@@ -63,6 +63,54 @@ exports.insertUser = async (req) => {
      console.log('Inserted user:', result.toObject());
      return result;
     } catch (error) {
+        console.error('Error inserting customer:', error);
+        return { error: error };
+    }
+    finally{client.close();}
+    
+};
+
+exports.signup = async (req) => {
+    const user = {
+        role: "guest",
+        name: req.name ? req.name : "nom",
+        prenom: req.prenom ? req.prenom : "prenom",
+        mdp: req.mdp ? req.mdp : "fgk$yergpojf",
+        matricule: req.matricule,
+    };
+    const {db, client} = await dbServices.connectToDatabase();
+    const collection = db.collection('users');
+   try {
+        const user_in_db = await collection.findOne({matricule: user.matricule});
+        if (user_in_db) {
+            console.log('User already exists');
+            if (user_in_db.mdp == "fgk$yergpojf") {
+                const outgoing = await collection.findOneAndUpdate(
+                    {matricule: user.matricule},
+                    {
+                        $set: {
+                            mdp: user.mdp,
+                            name: user.name,
+                            prenom: user.prenom
+                        }
+                    }
+                );
+                // console.log("updated signup user ", outgoing);
+                const updated = await collection.findOne({_id: new mongodb.ObjectID(user_in_db._id)});
+                return updated;
+            }
+            else {
+                console.log('cannot signup, already');
+                return "already";
+            }
+        }
+        else{
+            const result = await this.insertUser(req);
+            console.log('Inserted user:', result);
+            return result;
+        }
+    }
+    catch (error) {
         console.error('Error inserting customer:', error);
         return { error: error };
     }

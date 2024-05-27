@@ -12,6 +12,17 @@ exports.insertUser = async (req, res) => {
     }
 }
 
+exports.signup = async (req, res) => {
+    try {
+        const user = req.body;
+        const result = await userServices.signup(user);
+        return result;
+    } catch (error) {
+        console.error('Error signing up user:', error);
+        res.status(500).json({ error: error });
+    }
+};
+
 exports.loginUser = async (req, res) => {
     try {
         const user = req.body;
