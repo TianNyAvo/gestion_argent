@@ -9,13 +9,13 @@
 
 <body>
     <h1>Connexion</h1>
+    <center><p>si pas encore inscrit  <a style="background-color: rgb(219, 141, 17);" href="/signup">s'inscrire</a></p></center>
     <form id="loginForm">
         <p>matricule</p>
-        <input type="text" name="matricule" id="matricule">
+        <input type="text" name="matricule" id="matricule" autocomplete="off">
         <p>Mot de passe</p>
-        <input type="password" name="mdp" id="password">
+        <input type="password" name="mdp" id="password" autocomplete="off">
         <input type="submit" value="se connecter">
-        <a href="/signup">s'inscrire</a>
     </form>
 
     <div id="message"></div>

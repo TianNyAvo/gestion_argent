@@ -12,7 +12,9 @@
 <body>
     <h2>SLBA "Miray hina" tongasoa</h2>
     <h2 id="user-info-text"></h2>
+    <h2 id="user-matricule"></h2>
     <a id="guest-home-link">retour à l'accueil</a>
+    <a id="update-link">Modifier informations</a>
     <button id="logout-button">Se déconnecter</button>
 
     <center><table border="1" class="smaller-table">
@@ -22,7 +24,7 @@
                 <th>Total cotisation</th>
                 <th>Total recette annexe</th>
                 <th>Total dépenses</th>
-                <th>Total</th>
+                <th>Situation SLBA</th>
             </tr>
         </thead>
         <tbody>
@@ -52,8 +54,8 @@
                 </tr>
         </tbody>
     </table>
+    <br><br><br>
     </center>
-    <h3>voici votre résumé pour l'année <%= data.year %></h3>
     <form action="/guest/home" method="post" class="filter-form">
         <select name="year" id="">
             <option value="">année</option>
@@ -70,11 +72,12 @@
             <option value="2030">2030</option>
         </select>
         <input type="text" name="user_id" id="hiddenId" hidden>
-
-
+        
+        
         <input type="submit" value="filtrer">
     </form>
-
+    
+    <h3>Votre situation pour l'année <%= data.year %></h3>
 
     <center><div class="table-container"><table class="move-table" border="1">
         <thead>
@@ -111,6 +114,7 @@
                     </td>
                     <% 
                          total_user = 0
+                         index = 0
                         data.results.monthlyInputs.forEach(mvt => { 
                             total_user = total_user + mvt.total
                     %>
@@ -127,18 +131,18 @@
                                         </td>
                                     <% } else { %>
                                         <td>
-                                            <%= mvt.total %>
+                                            <%= mvt.total + getColor(data.results.monthlyInputs,index) %><!-- mettre ici-->
                                         </td>
                                     <% } %>
                                 <% } else { %>
                                     <% if (data.results.last_year < data.year){ %>
                                         <td>
-                                            <%= mvt.total %>
+                                            <%= mvt.total + getColor(data.results.monthlyInputs,index) %> <!-- mettre ici-->
                                         </td>
                                     <% } %>
                                 <% } %>
                             <% } %>
-                        
+                        <% index = index+1 %>
                         <% }); %>
                     <td>
                         <b><%= total_user %></b>
@@ -161,9 +165,11 @@
             console.log('Données utilisateur:', userData);
 
             // Ajoute les données à un champ hidden d'un formulaire avec l'ID "hiddenInput"
-            document.getElementById('user-info-text').textContent = "" + userData.name + " " + userData.prenom + " matricule " + userData.matricule;
+            document.getElementById('user-info-text').textContent = "" + userData.name + " " + userData.prenom;
+            document.getElementById('user-matricule').textContent= " IM: " + userData.matricule;   
             document.getElementById('hiddenId').value = userData._id;
             document.getElementById('guest-home-link').href = "/guest/home/" + userData._id;
+            document.getElementById('update-link').href = "/guest/view/update/" + userData._id;
         } else {
             console.log('Aucune donnée utilisateur trouvée dans le localStorage.');
         }

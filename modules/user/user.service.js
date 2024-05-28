@@ -70,6 +70,75 @@ exports.insertUser = async (req) => {
     
 };
 
+exports.getById = async (id) => {
+    try {
+        const user = await User.findById(id);
+
+        console.log("user by id ", user);
+
+        return user;
+    } catch (error) {
+        console.error('Error getting user by id:', error);
+        throw error;
+    }
+};
+
+exports.updateUser = async (user) => {
+    try {
+        const updated = await User.findOneAndUpdate(
+            { _id: user._id },
+            {
+                $set:{
+                    name: user.name,
+                    prenom: user.prenom,
+                    matricule: user.matricule,
+                    last_year: user.last_year,
+                    last_month: user.last_month
+                }
+            },
+            { new: true }
+        );
+        console.log("updated user ", updated);
+        if (!updated) {
+            throw new Error('User not found');
+        }
+        return updated;
+        
+    }
+    catch (error) {
+        console.error('Error updating user:', error);
+        throw error;
+    }
+};
+
+exports.updateUserGuest = async (user) => {
+    console.log("user guest", user);
+    try {
+        const updated = await User.findOneAndUpdate(
+            { _id: user._id },
+            {
+                $set:{
+                    name: user.name,
+                    prenom: user.prenom,
+                    matricule: user.matricule,
+                    mdp: user.mdp,
+                }
+            },
+            { new: true }
+        );
+        console.log("updated user guest ", updated);
+        if (!updated) {
+            throw new Error('User not found');
+        }
+        return updated;
+        
+    }
+    catch (error) {
+        console.error('Error updating user:', error);
+        throw error;
+    }
+};
+
 exports.signup = async (req) => {
     const user = {
         role: "guest",

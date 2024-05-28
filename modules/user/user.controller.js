@@ -12,6 +12,52 @@ exports.insertUser = async (req, res) => {
     }
 }
 
+exports.listUser = async (req, res) => {
+    try {
+        const result = await userServices.listUser();
+        return result;
+    } catch (error) {
+        console.error('Error listing user:', error);
+        res.status(500).json({ error: error });
+    }
+};
+
+exports.getByid = async (req, res) => {
+    try {
+        const user_id = req.params.user_id;
+        const result = await userServices.getById(user_id);
+        return result;
+    } catch (error) {
+        console.error('Error getting user by id:', error);
+        res.status(500).json({ error: error });
+    }
+};
+
+exports.updateUser = async (req, res) => {
+    try {
+        const user = req.body;
+        const result = await userServices.updateUser(user);
+        return result;
+    } catch (error) {
+        console.error('Error updating user:', error);
+        res.status(500).json({ error: error });
+    }
+};
+
+exports.updateUserGuest = async (req, res) => {
+    try {
+        const user = req.body;
+        const result = await userServices.updateUserGuest(user);
+        console.log("passage contoller", result);
+
+        return result;
+    } catch (error) {
+        console.error('Error updating user guest:', error);
+        res.status(500).json({ error: error });
+    }
+};
+
+
 exports.signup = async (req, res) => {
     try {
         const user = req.body;

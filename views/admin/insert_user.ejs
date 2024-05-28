@@ -13,13 +13,13 @@
     <a href="/admin/home">retour accueil</a>
     <form action="/admin/signup/user" method="post">
         <p>Nom</p>
-        <input type="text" name="name" id="name">
+        <input type="text" name="name" id="name" autocomplete="off">
 
         <p>Prénom</p>
-        <input type="text" name="prenom" id="prenom">
+        <input type="text" name="prenom" id="prenom" autocomplete="off">
         
         <p>Matricule</p>
-        <input type="text" name="matricule" id="matricule">
+        <input type="text" name="matricule" id="matricule" autocomplete="off">
         
         <p>Dernier payment</p>
         <select name="last_month" id="">
@@ -52,7 +52,7 @@
 
         <input type="text" name="role" value="guest" hidden>
         
-        <input type="submit" value="s'inscrire">
+        <input type="submit" value="ajouter">
 
     </form>
 </body>

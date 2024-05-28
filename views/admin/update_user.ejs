@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modifier membre</title>
+</head>
+<link rel="stylesheet" href="/style.css">
+
+<body>
+    <h3>Modifier membre </h3>
+
+    <a href="/admin/home">retour à l'accueil</a>
+    <a href="/admin/table">voir table</a>
+    <a href="/admin/listUser">liste membres</a>
+
+    <button id="logout-button">Se déconnecter</button>
+
+    <form action="/admin/update/user" method="post">
+        <p>Nom</p>
+        <input type="text" name="name" id="" value="<%= data.name %>" autocomplete="off">
+
+        <p>Prenom</p>
+        <input type="text" name="prenom" id="" value="<%= data.prenom %>" autocomplete="off">
+
+        <p>Matricule</p>
+        <input type="text" name="matricule" id="" value="<%= data.matricule %>" autocomplete="off">
+
+        <%
+            liste = ['Mois', 'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre']
+        %>
+
+        <p>Dernier paiement: <%= (data.last_month ? liste[data.last_month] : "-") +"/"+ (data.last_year ? data.last_year : "-") %></p>
+        
+        <p>Changer</p>
+        <select name="last_month" id="">
+            <option value="<%= data.last_month %>">mois</option>
+            <option value="1">janvier</option>
+            <option value="2">fevrier</option>
+            <option value="3">mars</option>
+            <option value="4">avril</option>
+            <option value="5">mai</option>
+            <option value="6">juin</option>
+            <option value="7">juillet</option>
+            <option value="8">aout</option>
+            <option value="9">septembre</option>
+            <option value="10">octobre</option>
+            <option value="11">novembre</option>
+            <option value="12">decembre</option>
+        </select>
+        <select name="last_year" id="">
+            <option value="<%= data.last_year %>">année</option>
+            <option value="2020">2020</option>
+            <option value="2021">2021</option>
+            <option value="2022">2022</option>
+            <option value="2023">2023</option>
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+            <option value="2026">2026</option>
+            <option value="2027">2027</option>
+        </select> 
+
+        <input type="text" name="_id" value="<%= data._id %>" hidden>
+
+        <input type="submit" value="valider">
+
+    </form>
+</body>
+</html>

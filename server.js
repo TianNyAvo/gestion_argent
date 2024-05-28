@@ -162,12 +162,43 @@ app.post('/admin/insert/user', async function (req,res) {
     res.redirect('/admin/home/'+data._id+'/'+data.name+'/'+data.prenom);
 });
 
+app.get('/admin/listUser', async function (req,res) {
+    var data = await userController.listUser(req,res);
+    res.render(__dirname + "/views/admin/list_user.ejs" , {data: data});
+});
+
+app.get('/admin/view/update/user/:user_id', async function (req,res) {
+    var user = await userController.getByid(req,res);
+    res.render(__dirname + "/views/admin/update_user.ejs", {data: user});
+});
+
+app.post('/admin/update/user', async function (req,res) {
+    const data = await userController.updateUser(req,res);
+    res.redirect('/admin/listUser');
+});
+
+//fonction changement de couleur dynamique des cotisations dans guest 
+
+function getColor(liste, index) {
+    var color = "";
+
+    if (liste[index].total == 0) {
+        color = "background-color: rgba(224, 123, 0, 0.659)";
+    }
+    else{
+        if(liste[index-1].total > 0 && liste[index].total == 0){
+            color = "background-color: rgba(224, 123, 0, 0.659)";
+        }
+    }
+    return color;
+}
+
 app.get('/guest/home/:user_id', async function(req,res) {
     var data = await userController.getUserCotisation(req,res);
     var totals = await mouvementController.getTotalInputsAndOutputs(req,res);
     var totalyear = await mouvementController.getTotalInputsOutputsByYear(req,res);
     console.log("data", data);
-    res.render(__dirname + "/views/guest/home.ejs", {data: data, situation: totals, totalyear: totalyear});
+    res.render(__dirname + "/views/guest/home.ejs", {data: data, situation: totals, totalyear: totalyear, getColor: getColor});
 });
 
 app.post('/guest/home', async function(req,res) {
@@ -175,7 +206,21 @@ app.post('/guest/home', async function(req,res) {
     var data = await userController.getUserCotisation(req,res);
     var totals = await mouvementController.getTotalInputsAndOutputs(req,res);
     var totalyear = await mouvementController.getTotalInputsOutputsByYear(req,res);
-    res.render(__dirname + "/views/guest/home.ejs", {data: data, situation: totals, totalyear: totalyear});
+    res.render(__dirname + "/views/guest/home.ejs", {data: data, situation: totals, totalyear: totalyear, getColor});
+});
+
+app.get('/guest/view/update/:user_id', async function (req,res) {
+    var user = await userController.getByid(req,res);
+    res.sendFile(__dirname + "/views/guest/update_user.html", {data: user});
+});
+
+app.post('/guest/update/user', async function (req,res) {
+    
+    const data = await userController.updateUserGuest(req,res);
+    // res.set('Content-Type', "text/javascript");
+    console.log("passage server .js",data);
+    res.status(200).json(data);
+    // res.redirect('/guest/home/'+data._id);
 });
 
 app.post('/login/user', async function (req,res) {
@@ -243,6 +288,13 @@ app.post('/admin/update/annexe', async function (req,res) {
 });
  
 app.get('/scripts/script.js', (req, res) => {
+    // Spécifiez le type MIME approprié pour les fichiers JavaScript
+    res.set('Content-Type', 'text/javascript');
+    // Envoyez le fichier script.js
+    res.sendFile(path.join(__dirname, 'scripts', 'script.js'));
+});
+
+app.get('/guest/scripts/script.js', (req, res) => {
     // Spécifiez le type MIME approprié pour les fichiers JavaScript
     res.set('Content-Type', 'text/javascript');
     // Envoyez le fichier script.js

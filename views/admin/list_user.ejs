@@ -1,77 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Liste par mois</title>
+    <title>Liste membres</title>
 </head>
 <link rel="stylesheet" href="/style.css">
 
 <body>
-    <h1>
-        <p id="prenom"> </p>
-    </h1>
+    <h2>Liste des membres</h2>
 
     <a href="/admin/view/insert/user">Ajouter membre</a>
-
-    <a href="/admin/table">voir table</a>
-    <!-- <a href="/admin/unpaid">voir liste de ceux qui n'ont pas payé</a> -->
     <a href="/insert/depense">Ajouter dépenses</a>
     <a href="/insert/annexe">Ajouter recette annexe</a>
     <a href="/admin/depenses">liste des dépenses</a>
     <a href="/admin/annexes">liste des recettes annexes</a>
-    <a href="/admin/allcotisation">liste cotisations</a>
-    <a href="/admin/listUser">liste des membres</a>
-    
+    <a href="/admin/table">voir table</a>
+    <a href="/insert/depense">Retour accueil</a>
     <button id="logout-button">Se déconnecter</button>
-    
 
-
-    <center><table border="1" class="smaller-table">
+    <center><table class="smaller-table">
         <thead>
             <tr>
-                <th>Année</th>
-                <th>Total cotisation</th>
-                <th>Total recette annexe</th>
-                <th>Total dépenses</th>
-                <th>Total</th>
+                <th>Nom</th>
+                <th>Prenom</th>
+                <th>Matricule</th>
+                <th>Dernier paiement</th>
             </tr>
         </thead>
         <tbody>
-            <% totalyear.forEach(total => { %>
+            <% 
+            
+            liste = ['Mois', 'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre']
+
+            data.forEach(user => { %>
                 <tr>
                     <td>
-                        <%= total.year %>
+                        <%= user.name %>
                     </td>
                     <td>
-                        <%= total.totalInput %>
+                        <%= user.prenom %>
                     </td>
                     <td>
-                        <%= total.totalAnnexe %>
-                    <td>
-                        <%= total.totalOutput %>
+                        <%= user.matricule %>
                     </td>
                     <td>
-                        <%= total.totalInput-total.totalOutput %>
+                        <%= (user.last_month ? liste[user.last_month] : "-") +"/"+ (user.last_year ? user.last_year : "-") %>
+                    </td>
+                    <td><a href="/admin/view/update/user/<%= user._id %>">modifier</a></td>
                 </tr>
-                <% }); %>
-                <tr>
-                    <td><h3>Totaux en Ar</h3></td>
-                    <td><h3> <%= situation.totalInput %></h3></td>
-                    <td><h3><%= situation.totalAnnexe %></h3></td>
-                    <td><h3><%= situation.totalOutput %></h3></td>
-                    <td><h3><%= (situation.totalInput+situation.totalAnnexe)-(situation.totalOutput) %></h3></td>
-                </tr>
+            <% }); %>
         </tbody>
-    </table>
-    </center>
+    </table></center>
 
-    <input type="text" id="hiddenPrenom" name="prenom" hidden>
-    <input type="text" id="hiddenId" name="user_id" hidden>
-    
 </body>
-
 </html>
 <script>
     document.addEventListener("DOMContentLoaded", function () {

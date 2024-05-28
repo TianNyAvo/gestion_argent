@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modifier membre</title>
+</head>
+<link rel="stylesheet" href="/style.css">
+
+<body>
+    <h3>Modifier informations </h3>
+
+    <a id="guest-home-link">retour à l'accueil</a>
+
+    <button id="logout-button">Se déconnecter</button>
+
+    <form id="updateGuestForm">
+        <p>Nom</p>
+        <input type="text" name="name" id="name" autocomplete="off">
+
+        <p>Prenom</p>
+        <input type="text" name="prenom" id="prenom" autocomplete="off">
+
+        <p>Matricule</p>
+        <input type="text" name="matricule" id="matricule" autocomplete="off">
+
+        <p>Mot de passe</p>
+        <input type="text" name="mdp" id="mdp" autocomplete="off">
+
+        <input type="text" name="_id" id="_id" hidden>
+
+        <input type="submit" value="valider">
+
+    </form>
+</body>
+</html>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="../../scripts/script.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Vérifie si des données existent dans le localStorage
+        if (localStorage.getItem('user_info')) {
+            // Récupère les données du localStorage et les convertit en objet JavaScript
+            var userData = JSON.parse(localStorage.getItem('user_info'));
+
+            // Affiche les données dans la console
+            console.log('Données utilisateur:', userData);
+
+            document.getElementById('guest-home-link').href = "/guest/home/" + userData._id;
+            document.getElementById('name').value = userData.name;
+            document.getElementById('prenom').value = userData.prenom;
+            document.getElementById('matricule').value = userData.matricule;
+            document.getElementById('mdp').value = userData.mdp;
+            document.getElementById('_id').value = userData._id;
+            document.getElementById('logout-button').addEventListener('click', function () {
+        localStorage.removeItem('user_info');
+        window.location.href = '/';
+    });
+            
+        }
+        else {
+            console.log('Aucune donnée utilisateur trouvée dans le localStorage.');
+        }
+    });
+</script>
