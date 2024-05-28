@@ -130,15 +130,27 @@
                                             <%= mvt.total %>
                                         </td>
                                     <% } else { %>
-                                        <td>
-                                            <%= mvt.total + getColor(data.results.monthlyInputs,index) %><!-- mettre ici-->
-                                        </td>
+                                        <% if (getColor(data.results.monthlyInputs,index,data.results.last_month,data.results.last_year,data.year)){ %>
+                                            <td class="orange">
+                                                <%= mvt.total %>
+                                            </td>
+                                        <% } else {%>
+                                                <td>
+                                                    <%= mvt.total %> <!--+ getColor(data.results.monthlyInputs,index,data.results.last_month,data.results.last_year,data.year) "background-color: rgba(224, 123, 0, 0.659)"%><!-- mettre ici-->
+                                                </td>
+                                            <% } %>
                                     <% } %>
                                 <% } else { %>
                                     <% if (data.results.last_year < data.year){ %>
-                                        <td>
-                                            <%= mvt.total + getColor(data.results.monthlyInputs,index) %> <!-- mettre ici-->
-                                        </td>
+                                        <% if (getColor(data.results.monthlyInputs,index,data.results.last_month,data.results.last_year,data.year)) { %>
+                                            <td class="orange">
+                                                <%= mvt.total %> <!--+ getColor(data.results.monthlyInputs,index,data.results.last_month,data.results.last_year,data.year) %> <!-- mettre ici-->
+                                            </td>
+                                        <% } else { %>
+                                                <td>
+                                                    <%= mvt.total %> <!--+ getColor(data.results.monthlyInputs,index,data.results.last_month,data.results.last_year,data.year) "background-color: rgba(224, 123, 0, 0.659)"%><!-- mettre ici-->
+                                                </td>
+                                            <% } %>
                                     <% } %>
                                 <% } %>
                             <% } %>
@@ -151,6 +163,40 @@
                 
         </tbody>
     </table></div></center>
+    <br><br>
+    <p>Légende</p>
+    <table class="even-smaller-table">
+        <tr>
+            <td style="background-color: rgba(126, 242, 118, 0.659);">
+                0
+            </td>
+            <td>Déjà réglé</td>
+        </tr>
+        <tr>
+            <td class="orange">
+                0
+            </td>
+            <td>
+                A régler en urgence
+            </td>
+        </tr>
+        <tr>
+            <td>
+               0 
+            </td>
+            <td>
+                Pas encore payé
+            </td>
+        </tr>
+        <tr>
+            <td>
+                montant supérieur à 0
+            </td>
+            <td>
+                Déjà payé
+            </td>
+        </tr>
+    </table>
 </body>
 
 </html>

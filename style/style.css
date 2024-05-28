@@ -82,6 +82,9 @@ th, td {
     border: 1px solid #ddd;
     text-align: left;
 }
+.orange{
+    background-color: rgba(224, 123, 0, 0.659)
+}
 
 th {
     background-color: #3498db;
@@ -137,6 +140,15 @@ input[type="submit"]:hover {
     margin: 20px 0;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
+.even-smaller-table{
+    
+    width: 30%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
 .filter-form{
     max-width: 300px;
     margin: 0 auto;

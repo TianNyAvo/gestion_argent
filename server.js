@@ -179,19 +179,62 @@ app.post('/admin/update/user', async function (req,res) {
 
 //fonction changement de couleur dynamique des cotisations dans guest 
 
-function getColor(liste, index) {
-    var color = "";
+function getColor(liste, index, last_month, last_year, year) {
+    // console.log("last_month", last_month, "last_year", last_year, "year", year);
+    var color = false;
+    var current_year = new Date().getFullYear();
 
-    if (liste[index].total == 0) {
-        color = "background-color: rgba(224, 123, 0, 0.659)";
-    }
-    else{
-        if(liste[index-1].total > 0 && liste[index].total == 0){
-            color = "background-color: rgba(224, 123, 0, 0.659)";
+    if (current_year == year) {
+        console.log("nous somme l'année courante", current_year);
+        console.log(liste)
+        if (liste[index].total == 0 && index == 0 )  {
+            color = true;
+            return color
+        }
+        else{
+            console.log("premier mois payé, suivant")
+            if (index > 0) {
+                if(liste[index-1].total > 0 && liste[index].total == 0){
+                    color = true;
+                    return color;
+                }
+            } 
         }
     }
-    return color;
-}
+    if(current_year > year){
+        if(year == last_year){
+            console.log("nous somme l'année du dernier paiement", last_year);
+            if(liste[index].month == last_month + 1 && liste[index].total == 0){
+                console.log("nous somme le mois suivant le dernier paiement", last_month + 1);
+                color = true;
+                return color;
+            }
+            else if( (liste[index].month > last_month + 1 && liste[index-1].total > 0) && liste[index].total == 0){
+                console.log("le mois après le dernier paiement est réglé, mois suivant", liste[index].month);
+                color = "background-color: rgba(0, 224, 0, 0.659)";
+                return color;
+            }
+            
+        }
+        else{
+            if (liste[index].total == 0 && index == 0 )  {
+                console.log("Nous sommme en Janvier d' une année entre courante et dernier paiement");
+                color = true;
+                return color
+            }
+            else{
+                if ( index > 0) {
+                    if(liste[index-1].total > 0 && liste[index].total == 0){
+                    console.log("Nous sommme dans un autre mois d' une année entre courante et dernier paiement");
+                        color = true;
+                        return color;
+                    }
+                } 
+            }
+        }
+    }
+return color;
+};
 
 app.get('/guest/home/:user_id', async function(req,res) {
     var data = await userController.getUserCotisation(req,res);
