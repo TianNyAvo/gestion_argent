@@ -5,6 +5,7 @@ var mongodb = require('mongodb');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const User = require('../user/user.service').User;
+require('dotenv').config();
 
 const mouvementSchema = new Schema({
     date: {
@@ -32,7 +33,7 @@ const mouvementSchema = new Schema({
 
 const Mouvement = mongoose.model('mouvement', mouvementSchema);
 
-mongoose.connect("mongodb+srv://tandriatoavina:mongopass1623@tiancluster.1h72rz3.mongodb.net/gestion_argent?retryWrites=true&w=majority&appName=TianCluster", {
+mongoose.connect(process.env.CONNECTION_STRING_DATABASE, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     bufferTimeoutMS: 60000, // Set bufferTimeoutMS to 60 seconds

@@ -2,10 +2,11 @@ const { MongoClient } = require('mongodb');
 const mongodb = require('mongodb')
 const { mongo } = require('mongoose');
 var dbServices = require('./database.service');
+require('dotenv').config();
 
 async function connectToDatabase() {
     try {
-        const client = await MongoClient.connect("mongodb+srv://tandriatoavina:mongopass1623@tiancluster.1h72rz3.mongodb.net/?retryWrites=true&w=majority&appName=TianCluster", {
+        const client = await MongoClient.connect(process.env.CONNECTION_STRING, {
             useUnifiedTopology: true
         });
         const db = client.db('gestion_argent');
