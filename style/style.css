@@ -83,7 +83,11 @@ th, td {
     text-align: left;
 }
 .orange{
-    background-color: rgba(224, 123, 0, 0.659)
+    background-color: rgb(255, 0, 0)
+}
+
+.error-message{
+    color: #c0392b;
 }
 
 th {

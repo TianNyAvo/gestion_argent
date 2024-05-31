@@ -211,7 +211,7 @@ function getColor(liste, index, last_month, last_year, year) {
             }
             else if( (liste[index].month > last_month + 1 && liste[index-1].total > 0) && liste[index].total == 0){
                 console.log("le mois après le dernier paiement est réglé, mois suivant", liste[index].month);
-                color = "background-color: rgba(0, 224, 0, 0.659)";
+                color = true;
                 return color;
             }
             

@@ -61,6 +61,10 @@ exports.updateUserGuest = async (req, res) => {
 exports.signup = async (req, res) => {
     try {
         const user = req.body;
+
+        if (req.body.matricule.includes(" ")) {
+            return "misy espace";
+        }
         const result = await userServices.signup(user);
         return result;
     } catch (error) {

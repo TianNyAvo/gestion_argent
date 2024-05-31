@@ -72,28 +72,34 @@ $(document).ready(function(){
                 // Check if login was successful
                 console.log(response);
                 if(response != "incorrect") {
-                    if (response.role == "admin") {
-                        // Store user data in localStorage
-                        localStorage.setItem('user_info', JSON.stringify(response));
-
-                        window.location.href = '/admin/home/'; // Redirect to user profile page
-                        // $.post('/admin/home', response, function(response) {
-                        //     // Handle the response from the server
-                        //     // console.log(response);
-                        //     // display page
-
-                        // });
-                        // Redirect to another page or do something else
+                    if (response != "misy espace") {
+                        if (response.role == "admin") {
+                            // Store user data in localStorage
+                            localStorage.setItem('user_info', JSON.stringify(response));
+    
+                            window.location.href = '/admin/home/'; // Redirect to user profile page
+                            // $.post('/admin/home', response, function(response) {
+                            //     // Handle the response from the server
+                            //     // console.log(response);
+                            //     // display page
+    
+                            // });
+                            // Redirect to another page or do something else
+                        }
+                        else {
+                            // Store user data in localStorage
+                            localStorage.setItem('user_info', JSON.stringify(response));
+                            // Redirect to another page or do something else
+                            //call a post method
+                            
+                            window.location.href = '/guest/home/'+response._id; // Redirect to user profile page
+                        }
                     }
                     else {
-                        // Store user data in localStorage
-                        localStorage.setItem('user_info', JSON.stringify(response));
-                        // Redirect to another page or do something else
-                        //call a post method
-                        
-                        window.location.href = '/guest/home/'+response._id; // Redirect to user profile page
+                        $('#message').text("Enlevez l'espace dans matricule");
                     }
-                } else {
+                }
+                else {
                     // Display error message
                     $('#message').text("données incorrectes");
                 }
