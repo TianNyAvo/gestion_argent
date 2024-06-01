@@ -279,7 +279,7 @@ app.post('/login/user', async function (req,res) {
     }
 });
 
-app.get('/insert/mouvement/:_id/:name/:prenom', function (req,res) {
+app.get('/insert/mouvement/:_id/:matricule', function (req,res) {
     res.render(__dirname + "/views/admin/insert_mouvement.ejs", {user: req.params})
 });
 
