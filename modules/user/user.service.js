@@ -235,11 +235,14 @@ exports.listUser = async () => {
     finally{client.close();}
 };
 
-exports.getAllUserCotisation = async (year) => {
+exports.getAllUserCotisation = async (year,matricule = "") => {
     try {
         const results = await User.aggregate([
             {
-                $match: { role: "guest" }
+                $match: {
+                    role: "guest",
+                    matricule: {'$regex': '^'+matricule}
+                }
             },
             {
                 $lookup: {

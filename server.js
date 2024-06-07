@@ -294,7 +294,7 @@ app.get('/insert/annexe', function (req,res) {
 app.post('/insert/mouvement', function (req,res) {
     console.log(req.body);
     mouvementController.insertMouvement(req,res);
-    res.redirect('/admin/home');
+    res.redirect('/admin/table');
 });
 
 app.get('/admin/update/mouvement/:id', async function (req,res) {

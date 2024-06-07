@@ -50,6 +50,8 @@
             document.getElementById('hiddenId').value = userData._id;
         } else {
             console.log('Aucune donnée utilisateur trouvée dans le localStorage.');
+            window.location.href = '/';
+
         }
     });
 

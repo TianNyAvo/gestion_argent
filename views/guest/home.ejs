@@ -220,6 +220,7 @@
             document.getElementById('update-link').href = "/guest/view/update/" + userData._id;
         } else {
             console.log('Aucune donnée utilisateur trouvée dans le localStorage.');
+            window.location.href = '/';
         }
     });
     document.getElementById('logout-button').addEventListener('click', function () {

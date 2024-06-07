@@ -16,7 +16,7 @@
     <a href="/admin/depenses">liste des dépenses</a>
     <a href="/admin/annexes">liste des recettes annexes</a>
     <a href="/admin/table">voir table</a>
-    <a href="/insert/depense">Retour accueil</a>
+    <a href="/admin/home">Retour accueil</a>
     <button id="logout-button">Se déconnecter</button>
 
     <center><table class="smaller-table">
@@ -72,6 +72,8 @@
         }
         else {
             console.log('Aucune donnée utilisateur trouvée dans le localStorage.');
+            window.location.href = '/';
+
         }
     });
 

@@ -58,3 +58,22 @@
 </body>
 
 </html>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Vérifie si des données existent dans le localStorage
+        if (localStorage.getItem('user_info')) {
+            // Récupère les données du localStorage et les convertit en objet JavaScript
+            console.log(localStorage.getItem('user_info'));
+        } else {
+            console.log('Aucune donnée utilisateur trouvée dans le localStorage.');
+            window.location.href = '/';
+
+        }
+    });
+
+    document.getElementById('logout-button').addEventListener('click', function() {
+        localStorage.removeItem('user_info');
+        window.location.href = '/';
+    });
+
+</script>

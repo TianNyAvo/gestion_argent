@@ -12,6 +12,7 @@
 <body>
     <h3>Ajouter cotisation pour matricule <%= user.matricule %></h3>
 
+    <a href="/admin/table">voir table</a>
     <a href="/admin/home">retour à l'accueil</a>
     <button id="logout-button">Se déconnecter</button>
 
@@ -53,6 +54,8 @@
             document.getElementById('hiddenId').value = userData._id;
         } else {
             console.log('Aucune donnée utilisateur trouvée dans le localStorage.');
+            window.location.href = '/';
+
         }
     });
 

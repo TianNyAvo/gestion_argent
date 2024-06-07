@@ -97,7 +97,9 @@ exports.getAllUserCotisation = async (req, res) => {
             year = new Date().getFullYear();
             console.log("year", year);
         }
-        const result = await userServices.getAllUserCotisation(year);
+        var matricule = req.body.search_matricule;
+        
+        const result = await userServices.getAllUserCotisation(year,matricule);
         return result;
     } catch (error) {
         console.error('Error getting all user cotisation:', error);
