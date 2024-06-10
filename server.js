@@ -297,6 +297,18 @@ app.post('/insert/mouvement', function (req,res) {
     res.redirect('/admin/table');
 });
 
+app.post('/insert/depense', function (req,res) {
+    console.log(req.body);
+    mouvementController.insertMouvement(req,res);
+    res.redirect('/admin/depenses');
+});
+
+app.post('/insert/annexe', function (req,res) {
+    console.log(req.body);
+    mouvementController.insertMouvement(req,res);
+    res.redirect('/admin/annexes');
+});
+
 app.get('/admin/update/mouvement/:id', async function (req,res) {
     const data = await mouvementController.getById(req,res);
     console.log('data',data );

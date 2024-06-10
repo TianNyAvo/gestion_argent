@@ -55,8 +55,15 @@ function formatDateEnglish(date) {
 }   
 
 exports.insertMouvement = async (req) => {
+    var date = "";
+    if (req.day == "" || req.day == null) {
+        date = req.year + "-" + req.month + "-01";
+    } else {
+        date = req.year + "-" + req.month + "-" + req.day;
+    }
+    console.log("date", date);
     const mouvement = new Mouvement({
-        date: !(req.date) ? Date.now() : new Date(req.date),
+        date: new Date(date),
         montant: req.montant,
         type: req.type,
         description: req.description,

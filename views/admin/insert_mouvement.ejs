@@ -18,10 +18,39 @@
 
     <form action="/insert/mouvement" method="post">
         <p>Date</p>
-        <input type="date" name="date" id="">
+        <select name="month" id="" required>
+            <option value="">Mois</option>
+            <option value="01">Janvier</option>
+            <option value="02">Février</option>
+            <option value="03">Mars</option>
+            <option value="04">Avril</option>
+            <option value="05">Mai</option>
+            <option value="06">Juin</option>
+            <option value="07">Juillet</option>
+            <option value="08">Août</option>
+            <option value="09">Septembre</option>
+            <option value="10">Octobre</option>
+            <option value="11">Novembre</option>
+            <option value="12">Décembre</option>
+        </select>
+        <select name="year" id="" required>
+            <option value="">Année</option>
+            <option value="2019">2019</option>
+            <option value="2020">2020</option>
+            <option value="2021">2021</option>
+            <option value="2022">2022</option>
+            <option value="2023">2023</option>
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+            <option value="2026">2026</option>
+            <option value="2027">2027</option>
+            <option value="2028">2028</option>
+            <option value="2029">2029</option>
+            <option value="2030">2030</option>
+        </select>
 
         <p>Montant</p>
-        <input type="number" name="montant" id="">
+        <input type="number" name="montant" id="" required>
 
         <input type="text" name="type" id="" value="input" hidden>
 
