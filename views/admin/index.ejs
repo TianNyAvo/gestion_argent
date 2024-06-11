@@ -35,7 +35,7 @@
                 <th>Total cotisation</th>
                 <th>Total recette annexe</th>
                 <th>Total dépenses</th>
-                <th>Total</th>
+                <th>Situation caisse</th>
             </tr>
         </thead>
         <tbody>
@@ -53,7 +53,8 @@
                         <%= total.totalOutput %>
                     </td>
                     <td>
-                        <%= total.totalInput-total.totalOutput %>
+                        <%= (total.totalInput+total.totalAnnexe)-total.totalOutput %>
+                    </td>
                 </tr>
                 <% }); %>
                 <tr>
