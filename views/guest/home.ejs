@@ -10,16 +10,23 @@
 
 
 <body>
-    <h2>SLBA "Miray hina" tongasoa</h2>
-    <h2 id="user-info-text"></h2>
-    <h2 id="user-matricule"></h2>
+    <div class="container">
+        <div class="logo-container">
+            <img src="/image/logo2.png" class="logo-img">
+        </div>
+        <div class="info-container">
+            <h2>SLBA "Miray hina" tongasoa</h2>
+            <h2 id="user-info-text"></h2>
+            <h2 id="user-matricule"></h2>
+        </div>
+    </div>
     <a id="guest-home-link">retour à l'accueil</a>
     <a id="update-link">Modifier informations</a>
     <button id="logout-button">Se déconnecter</button>
 
     <center>
         <h3 style="text-align: center; color: red;">Situation caisse SLBA M.H.</h3>
-    <table border="1" class="smaller-table">
+    <div class="table-container"><table border="1" class="smaller-table">
         <thead>
             <tr>
                 <th>Année</th>
@@ -56,6 +63,7 @@
                 </tr>
         </tbody>
     </table>
+</div>
     <br><br><br>
     </center>
     <form action="/guest/home" method="post" class="filter-form">
@@ -121,6 +129,12 @@
                             total_user = total_user + mvt.total
                     %>
 
+                            <% if(data.year == 2023){ %>
+                                <td style="background-color: rgba(126, 242, 118, 0.659);">
+                                    <%= mvt.total %>
+                                </td>
+                            <% } else { %>
+
                             <% if(data.year < data.results.last_year){ %>
                                 <td style="background-color: rgba(126, 242, 118, 0.659);">
                                     <%= mvt.total %>
@@ -155,6 +169,7 @@
                                             <% } %>
                                     <% } %>
                                 <% } %>
+                            <% } %>
                             <% } %>
                         <% index = index+1 %>
                         <% }); %>

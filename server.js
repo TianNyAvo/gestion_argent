@@ -291,9 +291,9 @@ app.get('/insert/annexe', function (req,res) {
     res.sendFile(__dirname + "/views/admin/insert_annexe.html")
 });
 
-app.post('/insert/mouvement', function (req,res) {
+app.post('/insert/mouvement', async function (req,res) {
     console.log(req.body);
-    mouvementController.insertMouvement(req,res);
+    await mouvementController.insertMouvement(req, res);
     res.redirect('/admin/table');
 });
 
@@ -361,4 +361,8 @@ app.get('/style/style.js', (req, res) => {
     res.set('Content-Type', 'text/html');
     // Envoyez le fichier script.js
     res.sendFile(path.join(__dirname, 'style', 'style.js'));
+});
+
+app.get('/image/logo2.png', (req, res) => {
+    res.sendFile(path.join(__dirname, 'image', 'logo2.png'));
 });

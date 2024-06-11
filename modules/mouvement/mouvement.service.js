@@ -62,22 +62,62 @@ exports.insertMouvement = async (req) => {
         date = req.year + "-" + req.month + "-" + req.day;
     }
     console.log("date", date);
-    const mouvement = new Mouvement({
-        date: new Date(date),
-        montant: req.montant,
-        type: req.type,
-        description: req.description,
-        user_id: req.user_id ? new mongodb.ObjectId(req.user_id) : null,
-        });
-    const {db, client} = await dbServices.connectToDatabase();
-    // const collection = db.collection('users');
-   try {
-     const result = await mouvement.save();
-     console.log('Inserted mouvement:', result.toObject());
-     return result.toObject();
-    } catch (error) {
-        console.error('Error inserting mouvement:', error);
-        return { error: error };
+
+    if (req.type == "input") {
+        var montant = req.montant;
+    
+        var quotient = montant / 10000;
+    
+        try {
+            var month = Number.parseInt(req.month);
+            while (quotient > 0) {
+                // date = req.year + "-" + req.month + "-01";
+                const mouvement = new Mouvement({
+                        date: new Date(date),
+                        montant: 10000,
+                        type: req.type,
+                        description: req.description,
+                        user_id: req.user_id ? new mongodb.ObjectId(req.user_id) : null,
+                    });
+            
+                    const result = await mouvement.save();
+                    console.log('Inserted mouvement:', result.toObject());
+    
+                    quotient = quotient - 1;
+                    var next_month = month + 1;
+                    if (next_month < 10) {
+                        date = req.year + "-0" + next_month.toString() + "-01";
+                    } else {
+                        date = req.year + "-" + next_month.toString() + "-01";
+                    }
+                    console.log ("ici date next month",date)
+                    month = month + 1;
+                    // return "insertion mouvement";   
+            }
+        } catch (error) {
+            console.error('Error inserting mouvement:', error);
+            return { error: error };
+        }
+    }
+
+    else{
+        const mouvement = new Mouvement({
+            date: new Date(date),
+            montant: req.montant,
+            type: req.type,
+            description: req.description,
+            user_id: req.user_id ? new mongodb.ObjectId(req.user_id) : null,
+            });
+        const {db, client} = await dbServices.connectToDatabase();
+        // const collection = db.collection('users');
+       try {
+         const result = await mouvement.save();
+         console.log('Inserted mouvement:', result.toObject());
+         return result.toObject();
+        } catch (error) {
+            console.error('Error inserting mouvement:', error);
+            return { error: error };
+        }
     }
 };
 
