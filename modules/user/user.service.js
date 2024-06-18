@@ -93,6 +93,7 @@ exports.updateUser = async (user) => {
                     name: user.name,
                     prenom: user.prenom,
                     matricule: user.matricule,
+                    mdp: user.mdp,
                     last_year: user.last_year,
                     last_month: user.last_month
                 }
@@ -320,6 +321,98 @@ exports.getAllUserCotisation = async (year,matricule = "") => {
         throw error;
     }
 };
+
+exports.getUserCotisationPaid = async (year, matricule = "") => {
+    try {
+        const results = await User.aggregate([
+            {
+                $match: {
+                    role: "guest",
+                    matricule: { '$regex': '^' + matricule }
+                }
+            },
+            {
+                $lookup: {
+                    from: 'mouvements',
+                    let: { userId: '$_id' },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: {
+                                    $and: [
+                                        { $eq: ['$user_id', '$$userId'] },
+                                        { $eq: [{ $year: '$date' }, year] },
+                                        { $eq: ['$type', 'input'] }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            $group: {
+                                _id: { month: { $month: '$date' } },
+                                totalMontant: { $sum: '$montant' }
+                            }
+                        }
+                    ],
+                    as: 'mouvements'
+                }
+            },
+            {
+                $match: {
+                    'mouvements.0': { $exists: true }
+                }
+            },
+            {
+                $addFields: {
+                    monthlyInputs: {
+                        $map: {
+                            input: { $range: [1, 13] },
+                            as: 'month',
+                            in: {
+                                month: '$$month',
+                                total: {
+                                    $reduce: {
+                                        input: '$mouvements',
+                                        initialValue: 0,
+                                        in: {
+                                            $cond: [
+                                                { $eq: ['$$this._id.month', '$$month'] },
+                                                { $add: ['$$value', '$$this.totalMontant'] },
+                                                '$$value'
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    user_id: '$_id',
+                    name: 1,
+                    prenom: 1,
+                    matricule: 1,
+                    last_year: 1,
+                    last_month: 1,
+                    monthlyInputs: 1
+                }
+            }
+        ]);
+
+        // console.log('All user cotisations:', results[0].monthlyInputs);
+        return {
+            year: year,
+            results: results
+        };
+    } catch (error) {
+        console.error('Error fetching user movements:', error);
+        throw error;
+    }
+};
+
 
 exports.getUserCotisation = async (userId, year) => {
     console.log('year:', year);

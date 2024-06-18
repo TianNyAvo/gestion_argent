@@ -33,6 +33,17 @@ exports.getByid = async (req, res) => {
     }
 };
 
+exports.getByidBody = async (req, res) => {
+    try {
+        const user_id = req.body.user_id;
+        const result = await userServices.getById(user_id);
+        return result;
+    } catch (error) {
+        console.error('Error getting user by id:', error);
+        res.status(500).json({ error: error });
+    }
+};
+
 exports.updateUser = async (req, res) => {
     try {
         const user = req.body;
@@ -100,6 +111,27 @@ exports.getAllUserCotisation = async (req, res) => {
         var matricule = req.body.search_matricule;
         
         const result = await userServices.getAllUserCotisation(year,matricule);
+        return result;
+    } catch (error) {
+        console.error('Error getting all user cotisation:', error);
+        res.status(500).json({ error: error });
+    }
+};
+
+exports.getUserCotisationPaid = async (req, res) => {
+    try {
+        var year = "";
+        if (req.body.year != "" && req.body.year != null) {
+            year = Number.parseInt(req.body.year);
+            console.log("year", year);
+        }
+        else {
+            year = new Date().getFullYear();
+            console.log("year", year);
+        }
+        var matricule = req.body.search_matricule;
+        
+        const result = await userServices.getUserCotisationPaid(year,matricule);
         return result;
     } catch (error) {
         console.error('Error getting all user cotisation:', error);

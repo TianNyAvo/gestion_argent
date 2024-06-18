@@ -22,6 +22,7 @@
     <center><table class="smaller-table">
         <thead>
             <tr>
+                <th></th>
                 <th>Nom</th>
                 <th>Prenom</th>
                 <th>Matricule</th>
@@ -35,6 +36,9 @@
 
             data.forEach(user => { %>
                 <tr>
+                    <td><a href="/admin/guest/home/<%= user._id %>">
+                        voir compte perso
+                    </a></td>
                     <td>
                         <%= user.name %>
                     </td>

@@ -80,14 +80,14 @@ app.get('/admin/home', async function(req,res) {
 app.get('/admin/table', async function(req,res) {
     const data = await userController.getAllUserCotisation(req,res);
     req.body.year = new Date().getFullYear();
-    var totals = await mouvementController.getTotalInputsAndOutputs(req,res);
-    res.render(__dirname + "/views/admin/table.ejs", {data: data, situation: totals})
+    // var totals = await mouvementController.getTotalInputsAndOutputs(req,res);
+    res.render(__dirname + "/views/admin/table.ejs", {data: data})
 });
 
 app.post('/admin/table', async function(req,res) {
     const data = await userController.getAllUserCotisation(req,res);
-    var totals = await mouvementController.getTotalInputsAndOutputs(req,res);
-    res.render(__dirname + "/views/admin/table.ejs", {data: data, situation: totals})
+    // var totals = await mouvementController.getTotalInputsAndOutputs(req,res);
+    res.render(__dirname + "/views/admin/table.ejs", {data: data})
 });
 
 app.get('/admin/depenses', async function(req,res) {
@@ -107,12 +107,14 @@ app.get('/admin/annexes', async function(req,res) {
 
 app.get('/admin/allcotisation', async function(req,res) {
     const data = await mouvementController.getAllCotisationsByYear(req,res);
-    res.render(__dirname + "/views/admin/cotisation.ejs", {data: data});
+    const data2 = await userController.getUserCotisationPaid(req,res);
+    res.render(__dirname + "/views/admin/cotisation.ejs", {data: data2});
 });
 
 app.post('/admin/allcotisation', async function(req,res) {
     const data = await mouvementController.getAllCotisationsByYear(req,res);
-    res.render(__dirname + "/views/admin/cotisation.ejs", {data: data});
+    const data2 = await userController.getUserCotisationPaid(req,res);
+    res.render(__dirname + "/views/admin/cotisation.ejs", {data: data2});
 });
 
 app.get('/admin/byMonth', async function(req,res) {
@@ -250,6 +252,24 @@ app.post('/guest/home', async function(req,res) {
     var totals = await mouvementController.getTotalInputsAndOutputs(req,res);
     var totalyear = await mouvementController.getTotalInputsOutputsByYear(req,res);
     res.render(__dirname + "/views/guest/home.ejs", {data: data, situation: totals, totalyear: totalyear, getColor});
+});
+
+app.get('/admin/guest/home/:user_id', async function(req,res) {
+    var user = await userController.getByid(req,res);
+    var data = await userController.getUserCotisation(req,res);
+    var totals = await mouvementController.getTotalInputsAndOutputs(req,res);
+    var totalyear = await mouvementController.getTotalInputsOutputsByYear(req,res);
+    console.log("data", data);
+    res.render(__dirname + "/views/admin/guest_home.ejs", {user: user, data: data, situation: totals, totalyear: totalyear, getColor: getColor});
+});
+
+app.post('/admin/guest/home', async function(req,res) {
+    console.log('request',req.body);
+    var user = await userController.getByidBody(req,res);
+    var data = await userController.getUserCotisation(req,res);
+    var totals = await mouvementController.getTotalInputsAndOutputs(req,res);
+    var totalyear = await mouvementController.getTotalInputsOutputsByYear(req,res);
+    res.render(__dirname + "/views/admin/guest_home.ejs", {user: user, data: data, situation: totals, totalyear: totalyear, getColor});
 });
 
 app.get('/guest/view/update/:user_id', async function (req,res) {

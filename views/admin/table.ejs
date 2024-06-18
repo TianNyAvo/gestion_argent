@@ -19,6 +19,7 @@
     <a href="/insert/depense">Ajouter dépenses</a>
     <a href="/insert/annexe">Ajouter recette annexe</a>
     <a href="/admin/listUser">liste des membres</a>
+    <a href="/admin/allcotisation">liste cotisations</a>
     <a href="/admin/home">retour accueil</a>
     
     <button id="logout-button">Se déconnecter</button>
@@ -47,8 +48,7 @@
         
         <input type="submit" value="filtrer">
     </form>
-    <!-- <h3>Total des cotisations <%= situation.totalInput %>Ar</h3>
-    <h3>Total des dépenses <%= situation.totalOutput %>Ar</h3> -->
+    
     
     <center><div class="table-container"><table class="move-table" border="1">
         <thead>
@@ -82,6 +82,8 @@
                             href="/insert/mouvement/<%= mouvement.user_id %>/<%= mouvement.matricule %>">ajouter cotisation</a></td>
                     <td><a href="/admin/singleUser/<%= mouvement.user_id %>">
                             <%= mouvement.name %>
+                        </a>  <a href="/admin/guest/home/<%= mouvement.user_id %>">
+                            voir compte perso
                         </a></td>
                     <td>
                         <%= mouvement.prenom %>

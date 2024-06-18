@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informations</title>
+</head>
+<link rel="stylesheet" href="/style.css">
+
+
+<body>
+    <div class="container">
+        <div class="logo-container">
+            <img src="/image/logo2.png" class="logo-img">
+        </div>
+        <div class="info-container">
+            <h2>SLBA "Miray hina" tongasoa</h2>
+            <h2>IM: <%= user.matricule %></h2>
+        </div>
+    </div>
+    <a href="/admin/home">retour accueil</a>
+    <a href="/admin/listUser">liste des membres</a>
+    <a href="/admin/table">voir table</a>
+    <a href="/admin/view/update/user/<%= user._id %>">modifier informations</a>
+    <button id="logout-button">Se déconnecter</button>
+
+    <center>
+        <h3 style="text-align: center; color: red;">Situation caisse SLBA M.H.</h3>
+    <div class="table-container"><table border="1" class="smaller-table">
+        <thead>
+            <tr>
+                <th>Année</th>
+                <th>Total cotisation</th>
+                <th>Total recette annexe</th>
+                <th>Total dépenses</th>
+                <th>Situation SLBA</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% totalyear.forEach(total => { %>
+                <tr>
+                    <td>
+                        <%= total.year %>
+                    </td>
+                    <td>
+                        <%= total.totalInput %>
+                    </td>
+                    <td>
+                        <%= total.totalAnnexe %>
+                    <td>
+                        <%= total.totalOutput %>
+                    </td>
+                    <td>
+                        <%= (total.totalInput+total.totalAnnexe)-total.totalOutput %>
+                </tr>
+                <% }); %>
+                <tr>
+                    <td><h3>Total en Ar</h3></td>
+                    <td><h3> <%= situation.totalInput %></h3></td>
+                    <td><h3><%= situation.totalAnnexe %></h3></td>
+                    <td><h3><%= situation.totalOutput %></h3></td>
+                    <td><h3><%= (situation.totalInput+situation.totalAnnexe)-situation.totalOutput %></h3></td>
+                </tr>
+        </tbody>
+    </table>
+</div>
+    <br><br><br>
+    </center>
+    <form action="/admin/guest/home" method="post" class="filter-form">
+        <select name="year" id="">
+            <option value="">année</option>
+            <option value="2020">2020</option>
+            <option value="2021">2021</option>
+            <option value="2022">2022</option>
+            <option value="2023">2023</option>
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+            <option value="2026">2026</option>
+            <option value="2027">2027</option>
+            <option value="2028">2028</option>
+            <option value="2029">2029</option>
+            <option value="2030">2030</option>
+        </select>
+        <input type="text" name="user_id" id="hiddenId"  value="<%= user._id %>" hidden>
+        
+        
+        <input type="submit" value="filtrer">
+    </form>
+    
+    <h3>Votre situation pour l'année <%= data.year %></h3>
+
+    <center><div class="table-container"><table class="move-table" border="1">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Prenom</th>
+                <th>Matricule</th>
+                <th>Janvier</th>
+                <th>Février</th>
+                <th>Mars</th>
+                <th>Avril</th>
+                <th>Mai</th>
+                <th>Juin</th>
+                <th>Juillet</th>
+                <th>Août</th>
+                <th>Septembre</th>
+                <th>Octobre</th>
+                <th>Novembre</th>
+                <th>Décembre</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+                    
+                    <td>
+                        <%= data.results.name %>
+                    </td>
+                    <td>
+                        <%= data.results.prenom %>
+                    </td>
+                    <td>
+                        <%= data.results.matricule %>
+                    </td>
+                    <% 
+                         total_user = 0
+                         index = 0
+                        data.results.monthlyInputs.forEach(mvt => { 
+                            total_user = total_user + mvt.total
+                    %>
+
+                            <% if(data.year == 2023){ %>
+                                <td style="background-color: rgba(126, 242, 118, 0.659);">
+                                    <%= mvt.total %>
+                                </td>
+                            <% } else { %>
+
+                            <% if(data.year < data.results.last_year){ %>
+                                <td style="background-color: rgba(126, 242, 118, 0.659);">
+                                    <%= mvt.total %>
+                                </td>
+                            <% } else {%> 
+                                <% if(data.results.last_year == data.year){ %>
+                                    <% if(mvt.month <= data.results.last_month) { %>
+                                        <td style="background-color: rgba(126, 242, 118, 0.659);">
+                                            <%= mvt.total %>
+                                        </td>
+                                    <% } else { %>
+                                        <% if (getColor(data.results.monthlyInputs,index,data.results.last_month,data.results.last_year,data.year)){ %>
+                                            <td class="orange">
+                                                <%= mvt.total %>
+                                            </td>
+                                        <% } else {%>
+                                                <td>
+                                                    <%= mvt.total %> <!--+ getColor(data.results.monthlyInputs,index,data.results.last_month,data.results.last_year,data.year) "background-color: rgba(224, 123, 0, 0.659)"%><!-- mettre ici-->
+                                                </td>
+                                            <% } %>
+                                    <% } %>
+                                <% } else { %>
+                                    <% if (data.results.last_year < data.year){ %>
+                                        <% if (getColor(data.results.monthlyInputs,index,data.results.last_month,data.results.last_year,data.year)) { %>
+                                            <td class="orange">
+                                                <%= mvt.total %> <!--+ getColor(data.results.monthlyInputs,index,data.results.last_month,data.results.last_year,data.year) %> <!-- mettre ici-->
+                                            </td>
+                                        <% } else { %>
+                                                <td>
+                                                    <%= mvt.total %> <!--+ getColor(data.results.monthlyInputs,index,data.results.last_month,data.results.last_year,data.year) "background-color: rgba(224, 123, 0, 0.659)"%><!-- mettre ici-->
+                                                </td>
+                                            <% } %>
+                                    <% } %>
+                                <% } %>
+                            <% } %>
+                            <% } %>
+                        <% index = index+1 %>
+                        <% }); %>
+                    <td>
+                        <b><%= total_user %></b>
+                    </td>
+                </tr>
+                
+        </tbody>
+    </table></div></center>
+    <br><br>
+    <p>Légende</p>
+    <table class="even-smaller-table">
+        <tr>
+            <td style="background-color: rgba(126, 242, 118, 0.659);">
+                0
+            </td>
+            <td>Déjà réglé</td>
+        </tr>
+        <tr>
+            <td class="orange">
+                0
+            </td>
+            <td>
+                A payer
+            </td>
+        </tr>
+        <tr>
+            <td>
+               0 
+            </td>
+            <td>
+                Pas encore payé
+            </td>
+        </tr>
+        <tr>
+            <td>
+                montant supérieur à 0
+            </td>
+            <td>
+                Déjà payé
+            </td>
+        </tr>
+    </table>
+</body>
+
+</html>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Vérifie si des données existent dans le localStorage
+        if (localStorage.getItem('user_info')) {
+            // Récupère les données du localStorage et les convertit en objet JavaScript
+            var userData = JSON.parse(localStorage.getItem('user_info'));
+
+            // Affiche les données dans la console
+            console.log('Données utilisateur:', userData);
+
+            // Ajoute les données à un champ hidden d'un formulaire avec l'ID "hiddenInput"
+            document.getElementById('user-info-text').textContent = "" + userData.name + " " + userData.prenom;
+            document.getElementById('user-matricule').textContent= " IM: " + userData.matricule;   
+            document.getElementById('hiddenId').value = userData._id;
+            document.getElementById('guest-home-link').href = "/guest/home/" + userData._id;
+        } else {
+            console.log('Aucune donnée utilisateur trouvée dans le localStorage.');
+            window.location.href = '/';
+        }
+    });
+    document.getElementById('logout-button').addEventListener('click', function () {
+        localStorage.removeItem('user_info');
+        window.location.href = '/';
+    });
+
+</script>

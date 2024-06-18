@@ -14,6 +14,8 @@
     
 
     <a href="/admin/home">retour accueil</a>
+    <a href="/admin/table">voir table</a>
+
     
     <button id="logout-button">Se déconnecter</button>
     
@@ -32,54 +34,114 @@
             <option value="2029">2029</option>
             <option value="2030">2030</option>
         </select>
+
+        <p>matricule</p>
+        <input type="text" name="search_matricule">
     
         <input type="submit" value="filtrer">
     </form>
 
-    <center><table border="1" class="smaller-table">
+    <center><div class="table-container"><table class="move-table" border="1">
         <thead>
             <tr>
-                <th>date</th>
-                <th>Matricule</th>
+                <th></th>
                 <th>Nom</th>
                 <th>Prenom</th>
-                <th>Montant</th>
+                <th>Matricule</th>
+                <th>Janvier</th>
+                <th>Février</th>
+                <th>Mars</th>
+                <th>Avril</th>
+                <th>Mai</th>
+                <th>Juin</th>
+                <th>Juillet</th>
+                <th>Août</th>
+                <th>Septembre</th>
+                <th>Octobre</th>
+                <th>Novembre</th>
+                <th>Décembre</th>
+                <th>Total</th>
             </tr>
         </thead>
         <tbody>
             <% 
-                total = 0
-                data.cotisations.forEach(cotisation => { 
-                    total = total+cotisation.montant
+                total_per_month = [0,0,0,0,0,0,0,0,0,0,0,0]
+                data.results.forEach(mouvement => { 
             %>
                 <tr>
+                    <td><a
+                            href="/insert/mouvement/<%= mouvement.user_id %>/<%= mouvement.matricule %>">ajouter cotisation</a></td>
+                    <td><a href="/admin/singleUser/<%= mouvement.user_id %>">
+                            <%= mouvement.name %>
+                        </a>  <a href="/admin/guest/home/<%= mouvement.user_id %>">
+                            voir accueil
+                        </a></td>
                     <td>
-                        <%= cotisation.date %>
+                        <%= mouvement.prenom %>
                     </td>
                     <td>
-                        <%= cotisation.user.matricule %>
-                    <td>
-                        <%= cotisation.user.name %>
+                        <%= mouvement.matricule %>
                     </td>
+                    <% 
+                        total_user = 0
+                        mouvement.monthlyInputs.forEach(mvt => { 
+                            total_user = total_user + mvt.total
+                            total_per_month[mvt.month-1] = total_per_month[mvt.month-1] + mvt.total
+                    %>
+                        <% if(data.year < mouvement.last_year){ %>
+                                <td style="background-color: rgba(126, 242, 118, 0.659);">
+                                    <%= mvt.total %>
+                                </td>
+                            <% } else {%> 
+                                <% if(mouvement.last_year == data.year){ %>
+                                    <% if(mvt.month <= mouvement.last_month) { %>
+                                        <td style="background-color: rgba(126, 242, 118, 0.659);">
+                                            <%= mvt.total %>
+                                        </td>
+                                    <% } else { %>
+                                        <td>
+                                            <%= mvt.total %>
+                                        </td>
+                                    <% } %>
+                                <% } else { %>
+                                    <% if (mouvement.last_year < data.year){ %>
+                                        <td>
+                                            <%= mvt.total %>
+                                        </td>
+                                    <% } %>
+                                <% } %>
+                            <% } %>
+                        
+                        <% }); %>
+                        
+                        
                     <td>
-                        <%= cotisation.user.prenom %>
-                    </td>
-                    <td>
-                        <%= cotisation.montant %>
+                        <b><%= total_user %></b>
                     </td>
                 </tr>
                 <% }); %>
-                <tr>
+                <tr style="color: red;">
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td><b>total</b></td>
+                    <td><b>Total</b></td>
+                    <% 
+                        total = 0
+                        total_per_month.forEach(mvt => { 
+                            total = total + mvt
+                    %>
+                        <td>
+                            <b><%= mvt %></b>
+                        </td>
+                        <% }); %>
                     <td>
-                        <%= total %>
+                        <b><%= total %></b>
                     </td>
-                </tr>
         </tbody>
-    </table></center>
+    </table></div></center>
+
+    <input type="text" id="hiddenPrenom" name="prenom" hidden>
+    <input type="text" id="hiddenId" name="user_id" hidden>
 
 </body>
 
