@@ -71,7 +71,7 @@ $(document).ready(function(){
             success: function(response) {
                 // Check if login was successful
                 console.log(response);
-                if(response != "incorrect") {
+                if(response != "incorrect" && response != "already") {
                     if (response != "misy espace") {
                         if (response.role == "admin") {
                             // Store user data in localStorage

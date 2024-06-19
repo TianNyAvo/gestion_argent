@@ -176,9 +176,9 @@ exports.signup = async (req) => {
             }
         }
         else{
-            const result = await this.insertUser(req);
-            console.log('Inserted user:', result);
-            return result;
+            // const result = await this.insertUser(req);
+            console.log('user not in database');
+            return "already";
         }
     }
     catch (error) {
