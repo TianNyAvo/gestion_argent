@@ -189,21 +189,37 @@ function getColor(liste, index, last_month, last_year, year) {
     if (current_year == year) {
         console.log("nous somme l'année courante", current_year);
         console.log(liste)
-        if (liste[index].total == 0 && index == 0 )  {
-            color = true;
-            return color
+        if(year == last_year){
+            console.log("nous somme l'année du dernier paiement", last_year);
+            if(liste[index].month == last_month + 1 && liste[index].total == 0){
+                console.log("nous somme le mois suivant le dernier paiement", last_month + 1);
+                color = true;
+                return color;
+            }
+            else if( (liste[index].month > last_month + 1 && liste[index-1].total > 0) && liste[index].total == 0){
+                console.log("le mois après le dernier paiement est réglé, mois suivant", liste[index].month);
+                color = true;
+                return color;
+            }
+            
         }
-        else{
-            console.log("premier mois payé, suivant")
-            if (index > 0) {
-                if(liste[index-1].total > 0 && liste[index].total == 0){
-                    color = true;
-                    return color;
-                }
-            } 
+        else {
+            if (liste[index].total == 0 && index == 0 )  {
+                color = true;
+                return color
+            }
+            else{
+                console.log("premier mois payé, suivant")
+                if (index > 0) {
+                    if(liste[index-1].total > 0 && liste[index].total == 0){
+                        color = true;
+                        return color;
+                    }
+                } 
+            }
         }
     }
-    if(current_year > year){
+    else{
         if(year == last_year){
             console.log("nous somme l'année du dernier paiement", last_year);
             if(liste[index].month == last_month + 1 && liste[index].total == 0){
