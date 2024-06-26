@@ -27,8 +27,8 @@
     <button id="logout-button">Se déconnecter</button>
 
     <center>
-        <h3 style="text-align: center; color: red;">Caisse SLBA M.H.</h3>
-    <div class="table-container"><table border="1" class="smaller-table">
+        <h3 style="text-align: center; color: red;">Situation Caisse SLBA M.H.</h3>
+    <div class="table-container"><table border="1" class="smaller-table fixed-table">
         <thead>
             <tr>
                 <th>Année</th>
@@ -42,26 +42,26 @@
             <% totalyear.forEach(total => { %>
                 <tr>
                     <td>
-                        <%= total.year %>
+                        <%= formatNumberWithSpaces(total.year) %>
                     </td>
                     <td>
-                        <%= total.totalInput %>
+                        <%= formatNumberWithSpaces(total.totalInput) %>
                     </td>
                     <td>
-                        <%= total.totalAnnexe %>
+                        <%= formatNumberWithSpaces(total.totalAnnexe) %>
                     <td>
-                        <%= total.totalOutput %>
+                        <%= formatNumberWithSpaces(total.totalOutput) %>
                     </td>
                     <td>
-                        <%= (total.totalInput+total.totalAnnexe)-total.totalOutput %>
+                        <%= formatNumberWithSpaces((total.totalInput+total.totalAnnexe)-total.totalOutput) %>
                 </tr>
                 <% }); %>
                 <tr>
                     <td><h3>Total en Ar</h3></td>
-                    <td><h3> <%= situation.totalInput %></h3></td>
-                    <td><h3><%= situation.totalAnnexe %></h3></td>
-                    <td><h3><%= situation.totalOutput %></h3></td>
-                    <td><h3><%= (situation.totalInput+situation.totalAnnexe)-situation.totalOutput %></h3></td>
+                    <td><h3><%= formatNumberWithSpaces(situation.totalInput) %></h3></td>
+                    <td><h3><%= formatNumberWithSpaces(situation.totalAnnexe) %></h3></td>
+                    <td><h3><%= formatNumberWithSpaces(situation.totalOutput) %></h3></td>
+                    <td><h3><%= formatNumberWithSpaces((situation.totalInput+situation.totalAnnexe)-situation.totalOutput) %></h3></td>
                 </tr>
         </tbody>
     </table>
@@ -132,28 +132,28 @@
 
                             <% if(data.year == 2023){ %>
                                 <td style="background-color: rgba(126, 242, 118, 0.659);">
-                                    <%= mvt.total %>
+                                    <%= formatNumberWithSpaces(mvt.total) %>
                                 </td>
                             <% } else { %>
 
                             <% if(data.year < data.results.last_year){ %>
                                 <td style="background-color: rgba(126, 242, 118, 0.659);">
-                                    <%= mvt.total %>
+                                    <%= formatNumberWithSpaces(mvt.total) %>
                                 </td>
                             <% } else {%> 
                                 <% if(data.results.last_year == data.year){ %>
                                     <% if(mvt.month <= data.results.last_month) { %>
                                         <td style="background-color: rgba(126, 242, 118, 0.659);">
-                                            <%= mvt.total %>
+                                            <%= formatNumberWithSpaces(mvt.total) %>
                                         </td>
                                     <% } else { %>
                                         <% if (getColor(data.results.monthlyInputs,index,data.results.last_month,data.results.last_year,data.year)){ %>
                                             <td class="orange">
-                                                <%= mvt.total %>
+                                                <%= formatNumberWithSpaces(mvt.total) %>
                                             </td>
                                         <% } else {%>
                                                 <td>
-                                                    <%= mvt.total %> <!--+ getColor(data.results.monthlyInputs,index,data.results.last_month,data.results.last_year,data.year) "background-color: rgba(224, 123, 0, 0.659)"%><!-- mettre ici-->
+                                                    <%= formatNumberWithSpaces(mvt.total) %> <!--+ getColor(data.results.monthlyInputs,index,data.results.last_month,data.results.last_year,data.year) "background-color: rgba(224, 123, 0, 0.659)"%><!-- mettre ici-->
                                                 </td>
                                             <% } %>
                                     <% } %>
@@ -161,11 +161,11 @@
                                     <% if (data.results.last_year < data.year){ %>
                                         <% if (getColor(data.results.monthlyInputs,index,data.results.last_month,data.results.last_year,data.year)) { %>
                                             <td class="orange">
-                                                <%= mvt.total %> <!--+ getColor(data.results.monthlyInputs,index,data.results.last_month,data.results.last_year,data.year) %> <!-- mettre ici-->
+                                                <%= formatNumberWithSpaces(mvt.total) %> <!--+ getColor(data.results.monthlyInputs,index,data.results.last_month,data.results.last_year,data.year) %> <!-- mettre ici-->
                                             </td>
                                         <% } else { %>
                                                 <td>
-                                                    <%= mvt.total %> <!--+ getColor(data.results.monthlyInputs,index,data.results.last_month,data.results.last_year,data.year) "background-color: rgba(224, 123, 0, 0.659)"%><!-- mettre ici-->
+                                                    <%= formatNumberWithSpaces(mvt.total) %> <!--+ getColor(data.results.monthlyInputs,index,data.results.last_month,data.results.last_year,data.year) "background-color: rgba(224, 123, 0, 0.659)"%><!-- mettre ici-->
                                                 </td>
                                             <% } %>
                                     <% } %>
@@ -175,7 +175,7 @@
                         <% index = index+1 %>
                         <% }); %>
                     <td>
-                        <b><%= total_user %></b>
+                        <b><%= formatNumberWithSpaces(total_user) %></b>
                     </td>
                 </tr>
                 

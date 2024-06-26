@@ -55,7 +55,6 @@
     <center><div class="table-container"><table class="move-table" border="1">
         <thead>
             <tr>
-                <th></th>
                 <th>Nom</th>
                 <th>Prenom</th>
                 <th>Matricule</th>
@@ -80,13 +79,9 @@
                 data.results.forEach(mouvement => { 
             %>
                 <tr>
-                    <td><a
-                            href="/insert/mouvement/<%= mouvement.user_id %>/<%= mouvement.matricule %>">ajouter cotisation</a></td>
-                    <td><a href="/admin/singleUser/<%= mouvement.user_id %>">
-                            <%= mouvement.name %>
-                        </a>  <a href="/admin/guest/home/<%= mouvement.user_id %>">
-                            voir compte perso
-                        </a></td>
+                    <td>
+                        <%= mouvement.name %>
+                    </td>
                     <td>
                         <%= mouvement.prenom %>
                     </td>
@@ -132,7 +127,6 @@
                 </tr>
                 <% }); %>
                 <tr style="color: red;">
-                    <td></td>
                     <td></td>
                     <td></td>
                     <td><b>Total</b></td>

@@ -98,16 +98,20 @@ table {
 }
 
 .table-container {
-    width: 90%;
+    width: 100%;
     /* height: 100%; */
     overflow-x: auto;
     /* overflow-x: auto; */
+}
+.fixed-table{
+    width: 800px
 }
 
 th, td {
     padding: 12px;
     border: 1px solid #ddd;
     text-align: left;
+    white-space: nowrap;
 }
 .orange{
     background-color: rgb(255, 0, 0)
