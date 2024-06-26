@@ -14,7 +14,7 @@ exports.insertUser = async (req, res) => {
 
 exports.listUser = async (req, res) => {
     try {
-        const result = await userServices.listUser();
+        const result = await userServices.listUser(req.body.search_matricule);
         return result;
     } catch (error) {
         console.error('Error listing user:', error);
@@ -162,6 +162,27 @@ exports.getUserCotisation = async (req, res) => {
         return result;
     } catch (error) {
         console.error('Error getting user cotisation:', error);
+        res.status(500).json({ error: error });
+    }
+};
+
+exports.getAllUserCotisationUnpaid = async (req, res) => {
+    try {
+        var year = "";
+        if (req.body.year != "" && req.body.year != null) {
+            year = Number.parseInt(req.body.year);
+            console.log("year", year);
+        }
+        else {
+            year = new Date().getFullYear();
+            console.log("year", year);
+        }
+        var matricule = req.body.search_matricule;
+        
+        const result = await userServices.getAllUserCotisationUnpaid(year,matricule);
+        return result;
+    } catch (error) {
+        console.error('Error getting all user cotisation:', error);
         res.status(500).json({ error: error });
     }
 };

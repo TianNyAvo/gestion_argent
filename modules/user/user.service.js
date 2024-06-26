@@ -51,7 +51,7 @@ exports.insertUser = async (req) => {
     const user = new User({
         role: "guest",
         name: req.name ? req.name : "nom",
-        prenom: req.prenom ? req.prenom : "prenom",
+        prenom: req.prenom ? req.prenom : "prénom",
         mdp: req.mdp ? req.mdp : "fgk$yergpojf",
         matricule: req.matricule,
         last_year: req.last_year? req.last_year : null,
@@ -222,18 +222,32 @@ exports.loginUser = async (user) => {
 
 };
 
-exports.listUser = async () => {
-    const {db, client} = await dbServices.connectToDatabase();
-    const collection = db.collection('users');
+exports.listUser = async (matricule = "") => {
     try {
-        const result = await collection.find().toArray();
-        console.log('Listed users:', result);
-        return result;
+        const results = await User.aggregate([
+            {
+                $match: {
+                    role: "guest",
+                    matricule: {'$regex': '^'+matricule}
+                }
+            },
+        ]);
+        return results;  
     } catch (error) {
         console.error('Error listing users:', error);
         throw error;
     }
-    finally{client.close();}
+    // const {db, client} = await dbServices.connectToDatabase();
+    // const collection = db.collection('users');
+    // try {
+    //     const result = await collection.find().toArray();
+    //     console.log('Listed users:', result);
+    //     return result;
+    // } catch (error) {
+    //     console.error('Error listing users:', error);
+    //     throw error;
+    // }
+    // finally{client.close();}
 };
 
 exports.getAllUserCotisation = async (year,matricule = "") => {
@@ -315,6 +329,105 @@ exports.getAllUserCotisation = async (year,matricule = "") => {
         return {
             year: year,
             results: results
+        };
+    } catch (error) {
+        console.error('Error fetching user movements:', error);
+        throw error;
+    }
+};
+
+exports.getAllUserCotisationUnpaid = async (year, matricule = "") => {
+    try {
+        const results = await User.aggregate([
+            {
+                $match: {
+                    role: "guest",
+                    matricule: {'$regex': '^'+matricule}
+                }
+            },
+            {
+                $lookup: {
+                    from: 'mouvements',
+                    let: { userId: '$_id' },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: {
+                                    $and: [
+                                        { $eq: ['$user_id', '$$userId'] },
+                                        { $eq: [{ $year: '$date' }, year] },
+                                        { $eq: ['$type', 'input'] }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            $group: {
+                                _id: { month: { $month: '$date' } },
+                                totalMontant: { $sum: '$montant' }
+                            }
+                        }
+                    ],
+                    as: 'mouvements'
+                }
+            },
+            {
+                $addFields: {
+                    monthlyInputs: {
+                        $map: {
+                            input: { $range: [1, 13] },
+                            as: 'month',
+                            in: {
+                                month: '$$month',
+                                total: {
+                                    $reduce: {
+                                        input: '$mouvements',
+                                        initialValue: 0,
+                                        in: {
+                                            $cond: [
+                                                { $eq: ['$$this._id.month', '$$month'] },
+                                                { $add: ['$$value', '$$this.totalMontant'] },
+                                                '$$value'
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    user_id: '$_id',
+                    name: 1,
+                    prenom: 1,
+                    matricule: 1,
+                    last_year: 1,
+                    last_month: 1,
+                    monthlyInputs: 1
+                }
+            }
+        ]);
+
+        const filteredResults = results.filter(user => {
+            const lastYear = user.last_year || 0;
+            const lastMonth = user.last_month || 0;
+
+            return user.monthlyInputs.some(monthData => {
+                const { month, total } = monthData;
+                // Exclude months after the last payment
+                if (year > lastYear || (year === lastYear && month > lastMonth)) {
+                    return total === 0;
+                }
+                return false;
+            });
+        });
+
+        return {
+            year: year,
+            results: filteredResults
         };
     } catch (error) {
         console.error('Error fetching user movements:', error);

@@ -148,10 +148,17 @@ exports.getById = async (id) => {
 
 exports.UpdateMouvement = async (req) => {
     try {
+        var date = "";
+        if (req.day == "" || req.day == null) {
+            date = req.year + "-" + req.month + "-01";
+        } else {
+            date = req.year + "-" + req.month + "-" + req.day;
+        }
+        console.log("date", date);
         const updatedMouvement = await Mouvement.findOneAndUpdate(
             {_id:new mongodb.ObjectId(req._id)}, {
                 $set:{
-            date: req.date,
+            date: date,
             montant: req.montant,
             type: req.type,
             description: req.description,

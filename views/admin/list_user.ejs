@@ -10,14 +10,23 @@
 <body>
     <h2>Liste des membres</h2>
 
+    <a href="/admin/table">voir table</a>
     <a href="/admin/view/insert/user">Ajouter membre</a>
     <a href="/insert/depense">Ajouter dépenses</a>
     <a href="/insert/annexe">Ajouter recette annexe</a>
     <a href="/admin/depenses">liste des dépenses</a>
     <a href="/admin/annexes">liste des recettes annexes</a>
-    <a href="/admin/table">voir table</a>
+    <a href="/admin/allcotisation">liste cotisations</a>
     <a href="/admin/home">Retour accueil</a>
     <button id="logout-button">Se déconnecter</button>
+
+    <form action="/admin/listUser" method="post" class="filter-form">
+
+        <p>matricule</p>
+        <input type="text" name="search_matricule">
+        
+        <input type="submit" value="filtrer">
+    </form>
 
     <center><table class="smaller-table">
         <thead>
@@ -36,9 +45,13 @@
 
             data.forEach(user => { %>
                 <tr>
-                    <td><a href="/admin/guest/home/<%= user._id %>">
+                    <td>
+                        <a href="/admin/guest/home/<%= user._id %>">
                         voir compte perso
-                    </a></td>
+                        </a>
+                        <a href="/insert/mouvement/<%= user._id %>/<%= user.matricule %>">
+                            ajouter cotisation</a>
+                    </td>
                     <td>
                         <%= user.name %>
                     </td>

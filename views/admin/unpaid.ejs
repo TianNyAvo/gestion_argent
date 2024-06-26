@@ -4,20 +4,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Liste par mois</title>
+    <title>Liste impayés</title>
 </head>
+<link rel="stylesheet" href="/style.css">
+
 
 <body>
-    <h2>
+    <h1>
         <p id="prenom"> </p>
-    </h2>
-    <p>Liste de ceux qui n'ont pas encore payé pour l' année <%= data.year %></p>
-
-    <a href="/admin/home">voir liste par mois</a>
-
+    </h1>
+    
+    <a href="/admin/view/insert/user">Ajouter membre</a>
+    <a href="/admin/table">voir table</a>
+    
+    <a href="/insert/depense">Ajouter dépenses</a>
+    <a href="/insert/annexe">Ajouter recette annexe</a>
+    <a href="/admin/listUser">liste des membres</a>
+    <a href="/admin/allcotisation">liste cotisations</a>
+    <a href="/admin/depenses">liste des dépenses</a>
+    <a href="/admin/home">retour accueil</a>
+    
     <button id="logout-button">Se déconnecter</button>
-
-    <form action="/admin/unpaid" method="post">
+    
+    
+    
+    <h2>Liste des cotisation non payés pour l' année <%= data.year %></h2>
+    <form action="/admin/unpaid" method="post" class="filter-form">
         <select name="year" id="">
             <option value="">année</option>
             <option value="2020">2020</option>
@@ -33,38 +45,47 @@
             <option value="2030">2030</option>
         </select>
 
+        <p>matricule</p>
+        <input type="text" name="search_matricule">
+        
         <input type="submit" value="filtrer">
     </form>
-
-    <table class="move-table" border="1">
+    
+    
+    <center><div class="table-container"><table class="move-table" border="1">
         <thead>
             <tr>
                 <th></th>
-                <th>nom</th>
-                <th>prenom</th>
-                <th>matricule</th>
-                <th>Entrée</th>
-                <th>Sortie</th>
-                <th>Solde</th>
+                <th>Nom</th>
+                <th>Prenom</th>
+                <th>Matricule</th>
+                <th>Janvier</th>
+                <th>Février</th>
+                <th>Mars</th>
+                <th>Avril</th>
+                <th>Mai</th>
+                <th>Juin</th>
+                <th>Juillet</th>
+                <th>Août</th>
+                <th>Septembre</th>
+                <th>Octobre</th>
+                <th>Novembre</th>
+                <th>Décembre</th>
+                <th>Total</th>
             </tr>
         </thead>
         <tbody>
             <% 
-                total_entre=0
-                total_sortie=0
-                total_solde=0
-                data.user_info.forEach(mouvement=> {
-
-                    total_entre = total_entre+mouvement.totalInput
-                    total_sortie = total_sortie+mouvement.totalOutput
-                    total_solde = total_solde+mouvement.difference
-                %>
+                total_per_month = [0,0,0,0,0,0,0,0,0,0,0,0]
+                data.results.forEach(mouvement => { 
+            %>
                 <tr>
                     <td><a
-                            href="/insert/mouvement/<%= mouvement.user_id %>/<%= mouvement.name %>/<%= mouvement.prenom %>">insérer
-                            mouvement</a></td>
+                            href="/insert/mouvement/<%= mouvement.user_id %>/<%= mouvement.matricule %>">ajouter cotisation</a></td>
                     <td><a href="/admin/singleUser/<%= mouvement.user_id %>">
                             <%= mouvement.name %>
+                        </a>  <a href="/admin/guest/home/<%= mouvement.user_id %>">
+                            voir compte perso
                         </a></td>
                     <td>
                         <%= mouvement.prenom %>
@@ -72,38 +93,67 @@
                     <td>
                         <%= mouvement.matricule %>
                     </td>
+                    <% 
+                        total_user = 0
+                        mouvement.monthlyInputs.forEach(mvt => { 
+                            total_user = total_user + mvt.total
+                            total_per_month[mvt.month-1] = total_per_month[mvt.month-1] + mvt.total
+                    %>
+                        <% if(data.year < mouvement.last_year){ %>
+                                <td style="background-color: rgba(126, 242, 118, 0.659);">
+                                    <%= mvt.total %>
+                                </td>
+                            <% } else {%> 
+                                <% if(mouvement.last_year == data.year){ %>
+                                    <% if(mvt.month <= mouvement.last_month) { %>
+                                        <td style="background-color: rgba(126, 242, 118, 0.659);">
+                                            <%= mvt.total %>
+                                        </td>
+                                    <% } else { %>
+                                        <td>
+                                            <%= mvt.total %>
+                                        </td>
+                                    <% } %>
+                                <% } else { %>
+                                    <% if (mouvement.last_year < data.year){ %>
+                                        <td>
+                                            <%= mvt.total %>
+                                        </td>
+                                    <% } %>
+                                <% } %>
+                            <% } %>
+                        
+                        <% }); %>
+                        
+                        
                     <td>
-                        <%= mouvement.totalInput %>
-                    </td>
-                    <td>
-                        <%= mouvement.totalOutput %>
-                    </td>
-                    <td>
-                        <%= mouvement.difference %>
+                        <b><%= total_user %></b>
                     </td>
                 </tr>
                 <% }); %>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td><b>total</b></td>
+                <tr style="color: red;">
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td><b>Total</b></td>
+                    <% 
+                        total = 0
+                        total_per_month.forEach(mvt => { 
+                            total = total + mvt
+                    %>
                         <td>
-                            <%= total_entre %>
+                            <b><%= mvt %></b>
                         </td>
-                        <td>
-                            <%= total_sortie %>
-                        </td>
-                        <td>
-                            <%= total_solde %>
-                        </td>
-                    </tr>
+                        <% }); %>
+                    <td>
+                        <b><%= total %></b>
+                    </td>
         </tbody>
-    </table>
+    </table></div></center>
 
     <input type="text" id="hiddenPrenom" name="prenom" hidden>
     <input type="text" id="hiddenId" name="user_id" hidden>
-
+    
 </body>
 
 </html>

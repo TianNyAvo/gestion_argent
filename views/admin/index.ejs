@@ -9,8 +9,13 @@
 <link rel="stylesheet" href="/style.css">
 
 <body>
-    <div class="logo-container">
-        <img src="/image/logo2.png" class="logo-img">
+    <div class="container">
+        <div class="logo-container">
+            <img src="/image/logo2.png" class="logo-img">
+        </div>
+        <div class="info-container">
+            <h2>SLBA "Miray hina" tongasoa</h2>
+        </div>
     </div>
     <h1>
         <p id="prenom"> </p>
@@ -26,6 +31,7 @@
     <a href="/admin/annexes">liste des recettes annexes</a>
     <a href="/admin/allcotisation">liste cotisations</a>
     <a href="/admin/listUser">liste des membres</a>
+    <a href="/admin/unpaid">liste des impayés</a>
     
     <button id="logout-button">Se déconnecter</button>
     
@@ -38,34 +44,34 @@
                 <th>Total cotisation</th>
                 <th>Total recette annexe</th>
                 <th>Total dépenses</th>
-                <th>Situation caisse</th>
+                <th>Caisse SLBA M.H.</th>
             </tr>
         </thead>
         <tbody>
             <% totalyear.forEach(total => { %>
                 <tr>
                     <td>
-                        <%= total.year %>
+                        <%= formatNumberWithSpaces(total.year) %>
                     </td>
                     <td>
-                        <%= total.totalInput %>
+                        <%= formatNumberWithSpaces(total.totalInput) %>
                     </td>
                     <td>
-                        <%= total.totalAnnexe %>
+                        <%= formatNumberWithSpaces(total.totalAnnexe) %>
                     <td>
-                        <%= total.totalOutput %>
+                        <%= formatNumberWithSpaces(total.totalOutput) %>
                     </td>
                     <td>
-                        <%= (total.totalInput+total.totalAnnexe)-total.totalOutput %>
+                        <%= formatNumberWithSpaces((total.totalInput+total.totalAnnexe)-total.totalOutput) %>
                     </td>
                 </tr>
                 <% }); %>
                 <tr>
                     <td><h3>Totaux en Ar</h3></td>
-                    <td><h3> <%= situation.totalInput %></h3></td>
-                    <td><h3><%= situation.totalAnnexe %></h3></td>
-                    <td><h3><%= situation.totalOutput %></h3></td>
-                    <td><h3><%= (situation.totalInput+situation.totalAnnexe)-(situation.totalOutput) %></h3></td>
+                    <td><h3><%= formatNumberWithSpaces(situation.totalInput) %></h3></td>
+                    <td><h3><%= formatNumberWithSpaces(situation.totalAnnexe) %></h3></td>
+                    <td><h3><%= formatNumberWithSpaces(situation.totalOutput) %></h3></td>
+                    <td><h3><%= formatNumberWithSpaces((situation.totalInput+situation.totalAnnexe)-(situation.totalOutput)) %></h3></td>
                 </tr>
         </tbody>
     </table>

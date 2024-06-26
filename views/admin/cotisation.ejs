@@ -15,6 +15,9 @@
 
     <a href="/admin/home">retour accueil</a>
     <a href="/admin/table">voir table</a>
+    <a href="/admin/listUser">liste des membres</a>
+    <a href="/admin/depenses">liste des dépenses</a>
+    <a href="/admin/unpaid">liste des impayés</a>
 
     
     <button id="logout-button">Se déconnecter</button>
@@ -25,7 +28,6 @@
             <option value="2020">2020</option>
             <option value="2021">2021</option>
             <option value="2022">2022</option>
-            <option value="2023">2023</option>
             <option value="2024">2024</option>
             <option value="2025">2025</option>
             <option value="2026">2026</option>
@@ -74,7 +76,7 @@
                     <td><a href="/admin/singleUser/<%= mouvement.user_id %>">
                             <%= mouvement.name %>
                         </a>  <a href="/admin/guest/home/<%= mouvement.user_id %>">
-                            voir accueil
+                            voir compte perso
                         </a></td>
                     <td>
                         <%= mouvement.prenom %>

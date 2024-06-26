@@ -67,7 +67,7 @@ app.get('/admin/home', async function(req,res) {
     // console.log(data);
     var totals = await mouvementController.getTotalInputsAndOutputs(req,res);
     var totalyear = await mouvementController.getTotalInputsOutputsByYear(req,res);
-    res.render(__dirname + "/views/admin/index.ejs", {user: info, situation: totals, totalyear: totalyear});
+    res.render(__dirname + "/views/admin/index.ejs", {user: info, situation: totals, totalyear: totalyear, formatNumberWithSpaces});
 });
 
 // app.post('/admin/home', async function(req,res) {
@@ -106,15 +106,25 @@ app.get('/admin/annexes', async function(req,res) {
 });
 
 app.get('/admin/allcotisation', async function(req,res) {
-    const data = await mouvementController.getAllCotisationsByYear(req,res);
+    // const data = await mouvementController.getAllCotisationsByYear(req,res);
     const data2 = await userController.getUserCotisationPaid(req,res);
     res.render(__dirname + "/views/admin/cotisation.ejs", {data: data2});
 });
 
 app.post('/admin/allcotisation', async function(req,res) {
-    const data = await mouvementController.getAllCotisationsByYear(req,res);
+    // const data = await mouvementController.getAllCotisationsByYear(req,res);
     const data2 = await userController.getUserCotisationPaid(req,res);
     res.render(__dirname + "/views/admin/cotisation.ejs", {data: data2});
+});
+
+app.get('/admin/unpaid', async function (req,res) {
+    const data = await userController.getAllUserCotisationUnpaid(req,res);
+    res.render(__dirname + "/views/admin/unpaid.ejs", {data: data})
+});
+
+app.post('/admin/unpaid', async function (req,res) {
+    const data = await userController.getAllUserCotisationUnpaid(req,res);
+    res.render(__dirname + "/views/admin/unpaid.ejs", {data: data})
 });
 
 app.get('/admin/byMonth', async function(req,res) {
@@ -144,17 +154,6 @@ app.post('/admin/singleUser', async function(req,res) {
     // console.log("single user par an ", data);
 });
 
-app.get('/admin/unpaid', async function (req,res) {
-    const data = await userController.getUnpaidUserMovementsByMonthYear(req,res);
-    console.log("single user par an ", data);
-    res.render(__dirname + "/views/admin/unpaid.ejs", {data: data})
-});
-
-app.post('/admin/unpaid', async function (req,res) {
-    const data = await userController.getUnpaidUserMovementsByMonthYear(req,res);
-    res.render(__dirname + "/views/admin/unpaid.ejs", {data: data})
-});
-
 app.get('/admin/view/insert/user', function (req,res) {
     res.render(__dirname + "/views/admin/insert_user.ejs")
 });
@@ -165,6 +164,10 @@ app.post('/admin/insert/user', async function (req,res) {
 });
 
 app.get('/admin/listUser', async function (req,res) {
+    var data = await userController.listUser(req,res);
+    res.render(__dirname + "/views/admin/list_user.ejs" , {data: data});
+});
+app.post('/admin/listUser', async function (req,res) {
     var data = await userController.listUser(req,res);
     res.render(__dirname + "/views/admin/list_user.ejs" , {data: data});
 });
@@ -179,87 +182,12 @@ app.post('/admin/update/user', async function (req,res) {
     res.redirect('/admin/listUser');
 });
 
-//fonction changement de couleur dynamique des cotisations dans guest 
-
-function getColor(liste, index, last_month, last_year, year) {
-    // console.log("last_month", last_month, "last_year", last_year, "year", year);
-    var color = false;
-    var current_year = new Date().getFullYear();
-
-    if (current_year == year) {
-        console.log("nous somme l'année courante", current_year);
-        console.log(liste)
-        if(year == last_year){
-            console.log("nous somme l'année du dernier paiement", last_year);
-            if(liste[index].month == last_month + 1 && liste[index].total == 0){
-                console.log("nous somme le mois suivant le dernier paiement", last_month + 1);
-                color = true;
-                return color;
-            }
-            else if( (liste[index].month > last_month + 1 && liste[index-1].total > 0) && liste[index].total == 0){
-                console.log("le mois après le dernier paiement est réglé, mois suivant", liste[index].month);
-                color = true;
-                return color;
-            }
-            
-        }
-        else {
-            if (liste[index].total == 0 && index == 0 )  {
-                color = true;
-                return color
-            }
-            else{
-                console.log("premier mois payé, suivant")
-                if (index > 0) {
-                    if(liste[index-1].total > 0 && liste[index].total == 0){
-                        color = true;
-                        return color;
-                    }
-                } 
-            }
-        }
-    }
-    else{
-        if(year == last_year){
-            console.log("nous somme l'année du dernier paiement", last_year);
-            if(liste[index].month == last_month + 1 && liste[index].total == 0){
-                console.log("nous somme le mois suivant le dernier paiement", last_month + 1);
-                color = true;
-                return color;
-            }
-            else if( (liste[index].month > last_month + 1 && liste[index-1].total > 0) && liste[index].total == 0){
-                console.log("le mois après le dernier paiement est réglé, mois suivant", liste[index].month);
-                color = true;
-                return color;
-            }
-            
-        }
-        else{
-            if (liste[index].total == 0 && index == 0 )  {
-                console.log("Nous sommme en Janvier d' une année entre courante et dernier paiement");
-                color = true;
-                return color
-            }
-            else{
-                if ( index > 0) {
-                    if(liste[index-1].total > 0 && liste[index].total == 0){
-                    console.log("Nous sommme dans un autre mois d' une année entre courante et dernier paiement");
-                        color = true;
-                        return color;
-                    }
-                } 
-            }
-        }
-    }
-return color;
-};
-
 app.get('/guest/home/:user_id', async function(req,res) {
     var data = await userController.getUserCotisation(req,res);
     var totals = await mouvementController.getTotalInputsAndOutputs(req,res);
     var totalyear = await mouvementController.getTotalInputsOutputsByYear(req,res);
     console.log("data", data);
-    res.render(__dirname + "/views/guest/home.ejs", {data: data, situation: totals, totalyear: totalyear, getColor: getColor});
+    res.render(__dirname + "/views/guest/home.ejs", {data: data, situation: totals, totalyear: totalyear, getColor: getColor, formatNumberWithSpaces});
 });
 
 app.post('/guest/home', async function(req,res) {
@@ -267,7 +195,7 @@ app.post('/guest/home', async function(req,res) {
     var data = await userController.getUserCotisation(req,res);
     var totals = await mouvementController.getTotalInputsAndOutputs(req,res);
     var totalyear = await mouvementController.getTotalInputsOutputsByYear(req,res);
-    res.render(__dirname + "/views/guest/home.ejs", {data: data, situation: totals, totalyear: totalyear, getColor});
+    res.render(__dirname + "/views/guest/home.ejs", {data: data, situation: totals, totalyear: totalyear, getColor, formatNumberWithSpaces});
 });
 
 app.get('/admin/guest/home/:user_id', async function(req,res) {
@@ -276,7 +204,7 @@ app.get('/admin/guest/home/:user_id', async function(req,res) {
     var totals = await mouvementController.getTotalInputsAndOutputs(req,res);
     var totalyear = await mouvementController.getTotalInputsOutputsByYear(req,res);
     console.log("data", data);
-    res.render(__dirname + "/views/admin/guest_home.ejs", {user: user, data: data, situation: totals, totalyear: totalyear, getColor: getColor});
+    res.render(__dirname + "/views/admin/guest_home.ejs", {user: user, data: data, situation: totals, totalyear: totalyear, getColor: getColor, formatNumberWithSpaces});
 });
 
 app.post('/admin/guest/home', async function(req,res) {
@@ -285,7 +213,7 @@ app.post('/admin/guest/home', async function(req,res) {
     var data = await userController.getUserCotisation(req,res);
     var totals = await mouvementController.getTotalInputsAndOutputs(req,res);
     var totalyear = await mouvementController.getTotalInputsOutputsByYear(req,res);
-    res.render(__dirname + "/views/admin/guest_home.ejs", {user: user, data: data, situation: totals, totalyear: totalyear, getColor});
+    res.render(__dirname + "/views/admin/guest_home.ejs", {user: user, data: data, situation: totals, totalyear: totalyear, getColor, formatNumberWithSpaces});
 });
 
 app.get('/guest/view/update/:user_id', async function (req,res) {
@@ -402,3 +330,83 @@ app.get('/style/style.js', (req, res) => {
 app.get('/image/logo2.png', (req, res) => {
     res.sendFile(path.join(__dirname, 'image', 'logo2.png'));
 });
+
+// finction formatage des nombres
+function formatNumberWithSpaces(number) {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+}
+
+//fonction changement de couleur dynamique des cotisations dans guest 
+
+function getColor(liste, index, last_month, last_year, year) {
+    // console.log("last_month", last_month, "last_year", last_year, "year", year);
+    var color = false;
+    var current_year = new Date().getFullYear();
+
+    if (current_year == year) {
+        console.log("nous somme l'année courante", current_year);
+        console.log(liste)
+        if(year == last_year){
+            console.log("nous somme l'année du dernier paiement", last_year);
+            if(liste[index].month == last_month + 1 && liste[index].total == 0){
+                console.log("nous somme le mois suivant le dernier paiement", last_month + 1);
+                color = true;
+                return color;
+            }
+            else if( (liste[index].month > last_month + 1 && liste[index-1].total > 0) && liste[index].total == 0){
+                console.log("le mois après le dernier paiement est réglé, mois suivant", liste[index].month);
+                color = true;
+                return color;
+            }
+            
+        }
+        else {
+            if (liste[index].total == 0 && index == 0 )  {
+                color = true;
+                return color
+            }
+            else{
+                console.log("premier mois payé, suivant")
+                if (index > 0) {
+                    if(liste[index-1].total > 0 && liste[index].total == 0){
+                        color = true;
+                        return color;
+                    }
+                } 
+            }
+        }
+    }
+    else{
+        if(year == last_year){
+            console.log("nous somme l'année du dernier paiement", last_year);
+            if(liste[index].month == last_month + 1 && liste[index].total == 0){
+                console.log("nous somme le mois suivant le dernier paiement", last_month + 1);
+                color = true;
+                return color;
+            }
+            else if( (liste[index].month > last_month + 1 && liste[index-1].total > 0) && liste[index].total == 0){
+                console.log("le mois après le dernier paiement est réglé, mois suivant", liste[index].month);
+                color = true;
+                return color;
+            }
+            
+        }
+        else{
+            if (liste[index].total == 0 && index == 0 )  {
+                console.log("Nous sommme en Janvier d' une année entre courante et dernier paiement");
+                color = true;
+                return color
+            }
+            else{
+                if ( index > 0) {
+                    if(liste[index-1].total > 0 && liste[index].total == 0){
+                    console.log("Nous sommme dans un autre mois d' une année entre courante et dernier paiement");
+                        color = true;
+                        return color;
+                    }
+                } 
+            }
+        }
+    }
+return color;
+};
