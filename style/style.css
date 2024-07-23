@@ -113,6 +113,9 @@ th, td {
     text-align: left;
     white-space: nowrap;
 }
+td{
+    text-align: right;
+}
 .orange{
     background-color: rgb(255, 0, 0)
 }

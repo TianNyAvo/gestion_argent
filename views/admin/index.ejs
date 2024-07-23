@@ -52,17 +52,17 @@
             <% totalyear.forEach(total => { %>
                 <tr>
                     <td>
-                        <%= formatNumberWithSpaces(total.year) %>
+                        <%= total.year %>
                     </td>
-                    <td>
+                    <td style="text-align: right;">
                         <%= formatNumberWithSpaces(total.totalInput) %>
                     </td>
-                    <td>
+                    <td style="text-align: right;">
                         <%= formatNumberWithSpaces(total.totalAnnexe) %>
-                    <td>
+                    <td style="text-align: right;">
                         <%= formatNumberWithSpaces(total.totalOutput) %>
                     </td>
-                    <td>
+                    <td style="text-align: right;">
                         <%= formatNumberWithSpaces((total.totalInput+total.totalAnnexe)-total.totalOutput) %>
                     </td>
                 </tr>
