@@ -92,12 +92,12 @@ app.post('/admin/table', async function(req,res) {
 
 app.get('/admin/depenses', async function(req,res) {
     const data = await mouvementController.getDepensesByYear(req,res);
-    res.render(__dirname + "/views/admin/depenses.ejs", {data: data});
+    res.render(__dirname + "/views/admin/depenses.ejs", {data: data,formatNumberWithSpaces});
 });
 
 app.post('/admin/depenses', async function(req,res) {
     const data = await mouvementController.getDepensesByYear(req,res);
-    res.render(__dirname + "/views/admin/depenses.ejs", {data: data});
+    res.render(__dirname + "/views/admin/depenses.ejs", {data: data, formatNumberWithSpaces});
 });
 
 app.get('/admin/annexes', async function(req,res) {

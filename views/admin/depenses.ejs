@@ -64,7 +64,7 @@
                         <%= depense.description %>
                     </td>
                     <td>
-                        <%= depense.montant %>
+                        <%= formatNumberWithSpaces(depense.montant) %>
                     </td>
                     <td><a href="/admin/update/depense/<%= depense._id %>">modifier</a></td>
                 </tr>
